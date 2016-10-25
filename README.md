@@ -1,3 +1,0 @@
-# Raven
-
-Project Raven
