@@ -6,7 +6,9 @@ Created on 2016. 10. 5.
 '''
 import os
 import pymel.core as pm
+import pymel.core.datatypes as dt
 
+#import pymel.core.datatypes as 
 
 def zeroGroup(objs=[], prefix='', suffix='_zro', translate=True, rotate=True, scale=False, lockAttrZro=True):
     '''
@@ -273,15 +275,15 @@ def vector_strToVec( inputVal ):
             raise
 
         # 매칭
-        if   inputVal.lower()== 'x': return pm.dt.Vector( 1, 0, 0)
-        elif inputVal.lower()=='-x': return pm.dt.Vector(-1, 0, 0)
-        elif inputVal.lower()== 'y': return pm.dt.Vector( 0, 1, 0)
-        elif inputVal.lower()=='-y': return pm.dt.Vector( 0,-1, 0)
-        elif inputVal.lower()== 'z': return pm.dt.Vector( 0, 0, 1)
-        elif inputVal.lower()=='-z': return pm.dt.Vector( 0, 0,-1)
+        if   inputVal.lower()== 'x': return dt.Vector( 1, 0, 0)
+        elif inputVal.lower()=='-x': return dt.Vector(-1, 0, 0)
+        elif inputVal.lower()== 'y': return dt.Vector( 0, 1, 0)
+        elif inputVal.lower()=='-y': return dt.Vector( 0,-1, 0)
+        elif inputVal.lower()== 'z': return dt.Vector( 0, 0, 1)
+        elif inputVal.lower()=='-z': return dt.Vector( 0, 0,-1)
 
     else:
-        return pm.dt.Vector( inputVal )
+        return dt.Vector( inputVal )
 
 def snap( *args, **kwargs ):
     #TODO : 뭐든 조금 고쳐야 함
@@ -395,10 +397,10 @@ def getCenter( nodes, getPivot=True, getScalePivot=False ):
     for i in range( len(result)/3 ):
         pnt = i*3
         x,y,z = result[pnt], result[pnt+1], result[pnt+2]
-        points.append( pm.dt.Vector(x,y,z) )
+        points.append( dt.Vector(x,y,z) )
 
-    arr = pm.dt.Array(points)
-    sum = pm.dt.Vector( arr.sum(0) )
+    arr = dt.Array(points)
+    sum = dt.Vector( arr.sum(0) )  # @ReservedAssignment
     avr = sum / len(points)
 
     # 결과 리턴
