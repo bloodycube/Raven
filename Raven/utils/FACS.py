@@ -14,57 +14,188 @@ FACS.get(25)
 FACS.fromkeys([25,2,6])
 FACS.has_key(25)    
 '''
+import random
+
 class FACS(object):
-    FACS = {
-    #  NUM: FACS name                            Attribute name                                  Divide part
-         1:['Inner Brow Raiser',                'innerBrow_raiser',                 'brows',    ('L','R')],
-         2:['Outer Brow Raiser',                'outerBrow_raiser',                 'brows',    ('L','R')],
-         4:['Brow Lowerer',                     'brow_lowerer',                     'brows',    ('L','R')],
-         5:['Upper Lid Raiser',                 'upperLid_raiser',                  'eyes',     ('L','R')],
-         6:['Cheek Raiser and Lid Compressor',  'cheek_raiser_n_lid_compressor',    'eyes',     ('L','R')],
-         7:['Lid Tightener',                    'lid_tightener',                    'eyes',     ('L','R')],
-         8:['Lips Toward Each Other',           'lip_towardEachOther',              'mouth',    ('UL', 'UR', 'DL', 'DR')],
-         9:['Nose Wrinkler',                    'nose_wrinkler',                    'nose',     ('L','R')],
-        10:['Upper Lip Raiser',                 'upperLip_raiser',                  'mouth',    ('L','R')],
-        11:['Nasolabial Furrow Deepener',       'nasolabialFurrow_deepener',        'brows',    ('L','R')],
-        12:['Lip Corner Puller',                'lipCorner_puller',                 'mouth',    ('L','R')],
-        13:['Sharp Lip Puller',                 'sharpLip_puller',                  'mouth',    ('L','R')],
-        14:['Dimpler',                          'dimpler',                          'mouth',    ('L','R')],
-        15:['Lip Corner Depressor',             'lipCorner_depressor',              'mouth',    ('L','R')],
-        16:['Lower Lip Depressor',              'lowerLip_depressor',               'mouth',    ('L','R')],
-        17:['Chin Raiser',                      'chin_raiser',                      'mouth',    ()],
-        18:['Lip Pucker',                       'lip_pucker',                       'mouth',    ('L','R')],
-        20:['Lip Stretcher',                    'lip_stretcher',                    'mouth',    ('L','R')],
-        21:['Neck Tightener',                   'neck_tightener',                   'neck',     ('L','R')],
-        22:['Lip Funneler',                     'lip_funneler',                     'mouth',    ('UL', 'UR', 'DL', 'DR')],
-        23:['Lip Tightener',                    'lip_tightener',                    'mouth',    ('UL', 'UR', 'DL', 'DR')],
-        24:['Lip Presser',                      'lip_presser',                      'mouth',    ('UL', 'UR', 'DL', 'DR')],
-        25:['Lips Part',                        'lips_part',                        'mouth',    ()],
-        26:['Jaw Drop',                         'jaw_drop',                         'mouth',    ()],
-        28:['Lips Suck',                        'lip_suck',                         'mouth',    ('UL', 'UR', 'DL', 'DR')],
-        29:['Jaw Thrust',                       'jaw_thrust',                       'mouth',    ()],
-        30:['Jaw Sideways',                     'jaw_sideways',                     'mouth',    ('L','R')],
-        31:['Jaw Clencher',                     'jaw_clencher',                     'mouth',    ()],
-        32:['Bite',                             'lip_bite',                         'mouth',    ('UL', 'UR', 'DL', 'DR')],
-        33:['Blow',                             'cheek_blow',                       'mouth',    ('L','R')],
-        34:['Puff',                             'cheek_puff',                       'mouth',    ('L','R')],
-        35:['Suck',                             'cheek_suck',                       'mouth',    ('L','R')],
-        38:['Nostril Dilator',                  'nostril_dilator',                  'brows',    ('L','R')],
-        39:['Nostril Compressor',               'nostril_compressor',               'brows',    ('L','R')],
-        43:['Eye Closure',                      'eye_closure',                      'brows',    ('L','R')],
-        51:['Head Turn Left',                   'head_turn_left',                   'head',    ()],
-        52:['Head Turn Right',                  'head_turn_right',                  'head',    ()],
-        53:['Head Up',                          'head_up',                          'head',    ()],
-        54:['Head Down',                        'head_down',                        'head',    ()],
-        55:['Head Tilt Left',                   'head_tilt_left',                   'head',    ()],
-        56:['Head Tilt Right',                  'head_tilt_right',                  'head',    ()],
-        57:['Head Forward',                     'head_forward',                     'head',    ()],
-        58:['Head Back',                        'head_back',                        'head',    ()],
-        61:['Eyes Turn Left',                   'eye_left',                         'eyes',    ('L','R')],
-        62:['Eyes Turn Right',                  'eye_right',                        'eyes',    ('L','R')],
-        63:['Eyes Up',                          'eye_up',                           'eyes',    ('L','R')],
-        64:['Eyes Down',                        'eye_down',                         'eyes',    ('L','R')],
-        80:['Swallow',                          'swallow',                          'neck',    ()],
-        }
+    '''FACS 관련 데이터 리턴    
+    '''
+    __DATA = [
+        [ 1,  'Inner Brow Raiser',               101, 'brows', 'innerBrow_raiser',              ('L', 'R') ],
+        [ 2,  'Outer Brow Raiser',               102, 'brows', 'outerBrow_raiser',              ('L', 'R') ],
+        [ 4,  'Brow Lowerer',                    103, 'brows', 'brow_lowerer',                  ('L', 'R') ],
+        [ 5,  'Upper Lid Raiser',                207, 'eyes',  'upperLid_raiser',               ('L', 'R') ],
+        [ 6,  'Cheek Raiser and Lid Compressor', 208, 'eyes',  'cheek_raiser_n_lid_compressor', ('L', 'R') ],
+        [ 7,  'Lid Tightener',                   206, 'eyes',  'lid_tightener',                 ('L', 'R') ],
+        [ 8,  'Lips Toward Each Other',          401, 'mouth', 'lip_towardEachOther',           ('UL', 'UR', 'DL', 'DR') ],
+        [ 9,  'Nose Wrinkler',                   301, 'nose',  'nose_wrinkler',                 ('L', 'R') ],
+        [ 10, 'Upper Lip Raiser',                401, 'mouth', 'upperLip_raiser',               ('L', 'R') ],
+        [ 11, 'Nasolabial Furrow Deepener',      302, 'nose',  'nasolabialFurrow_deepener',     ('L', 'R') ],
+        [ 12, 'Lip Corner Puller',               401, 'mouth', 'lipCorner_puller',              ('L', 'R') ],
+        [ 13, 'Sharp Lip Puller',                401, 'mouth', 'sharpLip_puller',               ('L', 'R') ],
+        [ 14, 'Dimpler',                         401, 'mouth', 'dimpler',                       ('L', 'R') ],
+        [ 15, 'Lip Corner Depressor',            401, 'mouth', 'lipCorner_depressor',           ('L', 'R') ],
+        [ 16, 'Lower Lip Depressor',             401, 'mouth', 'lowerLip_depressor',            ('L', 'R') ],
+        [ 17, 'Chin Raiser',                     401, 'mouth', 'chin_raiser',                   ()],
+        [ 18, 'Lip Pucker',                      401, 'mouth', 'lip_pucker',                    ('L', 'R') ],
+        [ 20, 'Lip Stretcher',                   401, 'mouth', 'lip_stretcher',                 ('L', 'R') ],
+        [ 21, 'Neck Tightener',                  501, 'neck',  'neck_tightener',                ('L', 'R') ],
+        [ 22, 'Lip Funneler',                    401, 'mouth', 'lip_funneler',                  ('UL', 'UR', 'DL', 'DR') ],
+        [ 23, 'Lip Tightener',                   401, 'mouth', 'lip_tightener',                 ('UL', 'UR', 'DL', 'DR') ],
+        [ 24, 'Lip Presser',                     401, 'mouth', 'lip_presser',                   ('UL', 'UR', 'DL', 'DR') ],
+        [ 25, 'Lips Part',                       401, 'mouth', 'lips_part',                     () ],
+        [ 26, 'Jaw Drop',                        401, 'mouth', 'jaw_drop',                      () ],
+        [ 28, 'Lips Suck',                       401, 'mouth', 'lip_suck',                      ('UL', 'UR', 'DL', 'DR') ],
+        [ 29, 'Jaw Thrust',                      401, 'mouth', 'jaw_thrust',                    () ],
+        [ 30, 'Jaw Sideways',                    401, 'mouth', 'jaw_sideways',                  ('L', 'R') ],
+        [ 31, 'Jaw Clencher',                    401, 'mouth', 'jaw_clencher',                  () ],
+        [ 32, 'Bite',                            401, 'mouth', 'lip_bite',                      ('UL', 'UR', 'DL', 'DR') ],
+        [ 33, 'Blow',                            401, 'mouth', 'cheek_blow',                    ('L', 'R') ],
+        [ 34, 'Puff',                            401, 'mouth', 'cheek_puff',                    ('L', 'R') ],
+        [ 35, 'Suck',                            401, 'mouth', 'cheek_suck',                    ('L', 'R') ],
+        [ 38, 'Nostril Dilator',                 303, 'nose',  'nostril_dilator',               ('L', 'R') ],
+        [ 39, 'Nostril Compressor',              304, 'nose',  'nostril_compressor',            ('L', 'R') ],
+        [ 43, 'Eye Closure',                     205, 'eyes',  'eye_closure',                   ('L', 'R') ],
+        [ 51, 'Head Turn Left',                  503, 'head',  'head_turn_left',                () ],
+        [ 52, 'Head Turn Right',                 504, 'head',  'head_turn_right',               () ],
+        [ 53, 'Head Up',                         505, 'head',  'head_up',                       () ],
+        [ 54, 'Head Down',                       506, 'head',  'head_down',                     () ],
+        [ 55, 'Head Tilt Left',                  507, 'head',  'head_tilt_left',                () ],
+        [ 56, 'Head Tilt Right',                 508, 'head',  'head_tilt_right',               () ],
+        [ 57, 'Head Forward',                    509, 'head',  'head_forward',                  () ],
+        [ 58, 'Head Back',                       510, 'head',  'head_back',                     () ],
+        [ 61, 'Eyes Turn Left',                  201, 'eyes',  'eye_left',                      ('L', 'R') ],
+        [ 62, 'Eyes Turn Right',                 202, 'eyes',  'eye_right',                     ('L', 'R') ],
+        [ 63, 'Eyes Up',                         203, 'eyes',  'eye_up',                        ('L', 'R') ],
+        [ 64, 'Eyes Down',                       204, 'eyes',  'eye_down',                      ('L', 'R') ],
+        [ 80, 'Swallow',                         502, 'neck',  'swallow',                       () ],
+        ]    
+    
+    def __init__(self):
+        pass
+    
+    def getDict(self):
+        ''' 데이터를 딕셔너리 타입으로 리턴 '''
+        result = []
+        for item in sorted( self.__DATA ):            
+            result.append( {'auNum':item[0], 'auName':item[1], 'attrNum':item[2], 'attrGrp':item[3], 'attrName':item[4], 'divPart':item[5]} )
+    
+    def getAttrNames(self):
+        ''' 어트리뷰트 이름들 리턴 '''
+        result = []
+        for item in sorted( self.__DATA, key=lambda x:x[2] ):
+            result.append( item[4] )
+            
+        return result    
+    
+    def getAttrs(self, attrNum=False, attrGrp=True, attrName=True, splitPart=True):
+        ''' 어트리뷰트 이름들 리턴'''        
+        result = []
+        for item in sorted( self.__DATA, key=lambda x:x[2] ):
+            result.append( [item[2], item[3], item[4], item[5]] )
+            
+        return result
+
+    def getSlicedAttrs(self):
+        ''' 어트리뷰트 목록 리턴 
+        
+        :return: [[attrNum, attrGrp, attrName],...] attrNum 소팅
+        :rtype: list
+        
+        :Example:
+        >>> f=FACS()
+        >>> f.getSlicedAttrs()
+        [[101, 'brows', 'innerBrow_raiser_L'],
+        [101, 'brows', 'innerBrow_raiser_R'],
+        [102, 'brows', 'outerBrow_raiser_L'],
+        [102, 'brows', 'outerBrow_raiser_R'],
+        [103, 'brows', 'brow_lowerer_L'],
+        ....]
+
+        '''        
+        result = []
+        for item in sorted( self.__DATA, key=lambda x:x[2] ):
+            
+            if not item[5]:
+                # 중앙만 존재하는 어트리뷰트
+                result.append( [item[2], item[3], item[4]] )
+                
+            else:
+                # 분리가 되야하는 어트리뷰트
+                for part in item[5]:
+                    result.append( [item[2], item[3], '%s_%s'%(item[4],part)] )
+            
+        return result
+    
+    def getActionUnitName(self, *auNums):
+        ''' 번호를 입력하면 해당 facs 이름을 받음
+        
+        :param auNums: Action Unint Numbers
+        :type auNums: int, int,...
+        
+        :return: [attrName,...] 어트리뷰트 이름들
+        :rtype: list
+        
+        :Example:
+        >>> f=FACS()
+        >>> f.getAuName(1,2,4)
+        ['Inner Brow Raiser', 'Outer Brow Raiser', 'Brow Lowerer']
+        '''
+        result = []
+        for auNum in auNums:
+            for item in self.__DATA:
+                if item[0] == auNum:
+                    result.append( item[1] )
+        return result
+    
+    def game(self):
+        ''' FACS ActionUnit 암기용 게임 '''
+        myFACS = { item[0]:item[1] for item in self.__DATA}
+        myFACS_num = len( myFACS )
+        score = 0
+        questionNum = 0
+    
+        # 다 맞을 때까지 문제는 끝나지 않음
+        while myFACS:
+    
+            # 랜덤 번호 생성
+            num=len( myFACS )
+            randID = random.randrange( num )
+    
+            # 랜덤으로 뽑아냄
+            auNum = myFACS.keys()[randID]
+            auName = myFACS[auNum]
+    
+            # 질문
+            try:
+                print "(%02d/%02d)" % ( len( myFACS ), myFACS_num ),
+                result = raw_input(" %02d "%auNum)
+            except:
+                break 
+                
+            # 질문 한 개수
+            questionNum +=1
+            
+            # 평가용 스트링으로 변환
+            inputVal = result.lower().replace(' ','')
+            inputAuName = auName.lower().replace(' ','')
+    
+            # 판단
+            if inputAuName == inputVal:
+                # 점수 올려주고 
+                score += 1
+                
+                # 맞은 문제는 문제에서 삭제
+                myFACS.pop(auNum)       
+                
+                cond = 'Success!'
+            else:
+                cond = "Fail~ (%s)" % result
+                      
+            # 결과
+            print "%s : %s" % ( auName, cond )
+    
+        print "\n Score : %02d/%02d %d%%"%(score, myFACS_num, int( float(score)/myFACS_num * 100 ))
+
+f = FACS()
 
 
