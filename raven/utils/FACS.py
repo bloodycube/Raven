@@ -185,6 +185,6 @@ class FACS(object):
     
         print "\n Score : %02d/%02d %d%%"%(score, myFACS_num, int( float(score)/myFACS_num * 100 ))
 
-f = FACS()
+
 
 
