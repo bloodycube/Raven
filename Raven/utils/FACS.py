@@ -78,51 +78,38 @@ class FACS(object):
         result = []
         for item in sorted( self.__DATA ):            
             result.append( {'auNum':item[0], 'auName':item[1], 'attrNum':item[2], 'attrGrp':item[3], 'attrName':item[4], 'divPart':item[5]} )
-    
-    def getAttrNames(self):
-        ''' 어트리뷰트 이름들 리턴 '''
-        result = []
-        for item in sorted( self.__DATA, key=lambda x:x[2] ):
-            result.append( item[4] )
-            
-        return result    
-    
-    def getAttrs(self, attrNum=False, attrGrp=True, attrName=True, splitPart=True):
-        ''' 어트리뷰트 이름들 리턴'''        
-        result = []
-        for item in sorted( self.__DATA, key=lambda x:x[2] ):
-            result.append( [item[2], item[3], item[4], item[5]] )
-            
-        return result
-
-    def getSlicedAttrs(self):
-        ''' 어트리뷰트 목록 리턴 
+   
+    def getAttrs(self, attrNum=False, attrGrp=False, attrName=True, splitAttrName=False, splitPart=False, auNum=False, auName=False):
+        ''' 어트리뷰트 이름들 리턴
         
-        :return: [[attrNum, attrGrp, attrName],...] attrNum 소팅
-        :rtype: list
+        :param auNums: Action Unit Number 포함
+        :type auNums: bool
         
-        :Example:
-        >>> f=FACS()
-        >>> f.getSlicedAttrs()
-        [[101, 'brows', 'innerBrow_raiser_L'],
-        [101, 'brows', 'innerBrow_raiser_R'],
-        [102, 'brows', 'outerBrow_raiser_L'],
-        [102, 'brows', 'outerBrow_raiser_R'],
-        [103, 'brows', 'brow_lowerer_L'],
-        ....]
-
-        '''        
+        '''
         result = []
         for item in sorted( self.__DATA, key=lambda x:x[2] ):
             
-            if not item[5]:
-                # 중앙만 존재하는 어트리뷰트
-                result.append( [item[2], item[3], item[4]] )
+            tmp = []
+            if attrNum: tmp.append(item[2])
+            if attrGrp: tmp.append(item[3])
+            if attrName: tmp.append(item[4])
+            if splitPart: tmp.append(item[5])
+            if splitAttrName:
+                sl=[]
+                if not item[5]:
+                    # 중앙만 존재하는 어트리뷰트
+                    sl.append( item[4] )
                 
-            else:
-                # 분리가 되야하는 어트리뷰트
-                for part in item[5]:
-                    result.append( [item[2], item[3], '%s_%s'%(item[4],part)] )
+                else:
+                    # 분리가 되야하는 어트리뷰트
+                    for part in item[5]:
+                        sl.append( '%s_%s'%(item[4],part) )
+                tmp.append(sl)                  
+            
+            if auNum: tmp.append(item[0])
+            if auName: tmp.append(item[1])
+            
+            result.append( tmp )
             
         return result
     
@@ -148,7 +135,9 @@ class FACS(object):
         return result
     
     def game(self):
-        ''' FACS ActionUnit 암기용 게임 '''
+        ''' FACS ActionUnit 암기용 게임 
+        시작 후 번호가 출력되면 대응하는 ActionUnit 이름을 입력해야 함
+        '''
         myFACS = { item[0]:item[1] for item in self.__DATA}
         myFACS_num = len( myFACS )
         score = 0
