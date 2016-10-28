@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//raven/eye.py=utf-8
+encoding//raven/facialJoint.py=utf-8
 encoding//raven/utils/FACS.py=utf-8
 encoding//raven/utils/__init__.py=utf-8
 encoding//raven/utils/splitBlendShape.py=utf-8

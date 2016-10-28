@@ -10,7 +10,8 @@ import pymel.core.datatypes as dt
 
 #import pymel.core.datatypes as 
 
-def zeroGroup(objs=[], prefix='', suffix='_zro', translate=True, rotate=True, scale=False, lockAttrZro=True):
+#def zeroGroup(objs=[], prefix='', suffix='_zro', translate=True, rotate=True, scale=False, lockAttrZro=True):
+def zeroGroup( *objs, **kwargs):    
     '''
     objs = transform nodes name
     prefix = prefix
@@ -19,11 +20,21 @@ def zeroGroup(objs=[], prefix='', suffix='_zro', translate=True, rotate=True, sc
     rotate = rotate zero
     scale = scale zero
     '''
+    
+    # objs inputs
     if objs:
         pm.select(objs)
     objs = pm.ls(sl=True, flatten=True)
     if not objs:
         return
+    
+    # kwargs inputs
+    prefix      = kwargs.get('prefix', '') 
+    suffix      = kwargs.get('suffix', '_zro') 
+    translate   = kwargs.get('translate',True)
+    rotate      = kwargs.get('rotate',True)
+    scale       = kwargs.get('scale',True)
+    lockAttrZro = kwargs.get('lockZroAttr',True) 
 
     zeroGrps = []
     for obj in objs:
@@ -285,6 +296,7 @@ def vector_strToVec( inputVal ):
     else:
         return dt.Vector( inputVal )
 
+
 def snap( *args, **kwargs ):
     #TODO : 뭐든 조금 고쳐야 함
     '''
@@ -358,6 +370,7 @@ def snap( *args, **kwargs ):
         pos = getCenter( args[:-1] )
         point2 = pm.PyNode( args[-1] )
         point2.setTranslation(pos, space='world')
+    
         
 def getCenter( nodes, getPivot=True, getScalePivot=False ):
     '''
@@ -405,6 +418,7 @@ def getCenter( nodes, getPivot=True, getScalePivot=False ):
 
     # 결과 리턴
     return avr
+
 
 def resetMesh(mesh=None):
     # 입력이 있으면 입력된 노드를 선택
