@@ -9,231 +9,229 @@ joint Labeling
 눈 개수 여러개 가능하게.
 
 
+import sys
+sys.path.append(r'D:\workspace_Git\Raven')
 
+import raven
+reload(raven)
+eyeL = raven.facialJoint.Eye( side='L' )
+eyeL.createJoint()
+eyeL.rigTemplate()
 '''
 
 import pymel.core as pm
-import utils as ut
 
-class Template(object):
-
-    def __init__(self, side='L'):
-        '''초기회'''
-        # TODO: 입력예외처리, 같은측 노드가 있다거나.. 등등.
-        self.side = side
-        self.meta = None
-
-    def create(self):
-        '''노드생성'''
-        # node Create
-        grp_eyeRig = pm.group(em=True, n='tmp_eyeRig__SIDE__grp')
-        loc_eyePos = pm.group(em=True, n='tmp_eyePos__SIDE__loc')
-        loc_irisPos = pm.spaceLocator(n='tmp_irisPos__SIDE__loc')
-        loc_eyelidUp = pm.spaceLocator(n='tmp_eyelidUp__SIDE__loc')
-        grp_lidGrp = pm.group(em=True, n='tmp_lid__SIDE__grp')
-        loc_upperLidPos = pm.spaceLocator(n='tmp_upperLidPos__SIDE__loc')
-        loc_lowerLidPos = pm.spaceLocator(n='tmp_lowerLidPos__SIDE__loc')
-
-        # Hierachy
-        pm.parent(loc_upperLidPos, loc_lowerLidPos, grp_lidGrp)
-        pm.parent(grp_lidGrp, loc_eyePos)
-        pm.parent(loc_eyePos, loc_irisPos,
-                  loc_eyelidUp, grp_eyeRig)
-
-        # default Position
-        loc_irisPos.tz.set(5)
-        loc_upperLidPos.ty.set(1)
-        loc_lowerLidPos.ty.set(-1)
-        loc_eyelidUp.ty.set(5)
-
-        # constraint
-        pm.pointConstraint(loc_irisPos, grp_lidGrp)
-        pm.aimConstraint(loc_irisPos, loc_eyePos, aim=(
-            0, 0, 1), u=(0, 1, 0), wut='object', wuo=loc_eyelidUp)
-
-        # attr Lock
-        loc_irisPos.r.lock()
-        loc_irisPos.s.lock()
-        loc_eyelidUp.r.lock()
-        loc_eyelidUp.s.lock()
-        loc_upperLidPos.tx.lock()
-        loc_upperLidPos.r.lock()
-        loc_upperLidPos.s.lock()
-        loc_lowerLidPos.tx.lock()
-        loc_lowerLidPos.r.lock()
-        loc_lowerLidPos.s.lock()
-        loc_irisPos.v.lock()
-        loc_eyelidUp.v.lock()
-        loc_upperLidPos.v.lock()
-        loc_lowerLidPos.v.lock()
-
-        # rename
-        for node in [grp_eyeRig, loc_eyePos, loc_irisPos, loc_eyelidUp, grp_lidGrp, loc_upperLidPos, loc_lowerLidPos]:
-            node.rename(node.name().replace('_SIDE_', self.side))
-            node.rename(node.name().replace('__', '_'))
-
-        ut.zeroGroup(
-            [loc_irisPos, loc_eyelidUp, loc_upperLidPos, loc_lowerLidPos])
-
-        # display : scale
-        loc_irisPos.localScale.set(0, 0, 0)
-        loc_eyelidUp.localScale.set(0, 0, 0)
-        loc_upperLidPos.localScale.set(0, 0, 0)
-        loc_lowerLidPos.localScale.set(0, 0, 0)
-        grp_eyeRig.displayHandle.set(True)
-        loc_irisPos.displayHandle.set(True)
-        loc_eyelidUp.displayHandle.set(True)
-        loc_upperLidPos.displayHandle.set(True)
-        loc_lowerLidPos.displayHandle.set(True)
-
-        # display : color
-        grp_eyeRig.overrideEnabled.set(True)
-        grp_eyeRig.overrideColor.set(28)  # darkBlue
-        loc_irisPos.overrideEnabled.set(True)
-        loc_irisPos.overrideColor.set(4)  # darkRed
-        loc_eyelidUp.overrideEnabled.set(True)
-        loc_eyelidUp.overrideColor.set(23)  # darkGreen
-
-        # display : line
-        ut.rigCurveConnect(loc_irisPos, loc_eyePos)
-        ut.rigCurveConnect(loc_eyelidUp, loc_eyePos)
-
-        # write meta data
-        node_meta = grp_eyeRig  # pm.group(em=True, n='meta1')
-        node_meta.addAttr('rigMetaType', dt='string')
-        node_meta.addAttr('side', dt='string')
-        node_meta.addAttr('rigGrp', at='message')
-        node_meta.addAttr('eyePos', at='message')
-        node_meta.addAttr('irisPos', at='message')
-        node_meta.addAttr('eyelidUp', at='message')
-        node_meta.addAttr('upperLidPos', at='message')
-        node_meta.addAttr('lowerLidPos', at='message')
-        pm.select(node_meta)
-
-        node_meta.rigMetaType.set('eyeTemplate')
-        node_meta.side.set(self.side)
-        grp_eyeRig.message >> node_meta.rigGrp
-        loc_eyePos.message >> node_meta.eyePos
-        loc_irisPos.message >> node_meta.irisPos
-        loc_eyelidUp.message >> node_meta.eyelidUp
-        loc_upperLidPos.message >> node_meta.upperLidPos
-        loc_lowerLidPos.message >> node_meta.lowerLidPos
-
-        node_meta.rigMetaType.lock(True)
-        node_meta.side.lock(True)
-
-        # select
-        pm.select(grp_eyeRig)
+def snap(target, obj, constType):
+    # 롹 걸린 어트리뷰트 파악하고
+    lockedAttrs = obj.listAttr( locked=True )
+    
+    # 롹을 잠깐 풀고
+    for attr in lockedAttrs:
+        attr.unlock()
+        print attr
         
-        self.meta = node_meta        
-        self.rigGrp = grp_eyeRig
-        self.eyePos = loc_eyePos
-        self.irisPos = loc_irisPos
-        self.eyelidUp = loc_eyelidUp
-        self.upperLidPos = loc_upperLidPos
-        self.lowerLidPos = loc_lowerLidPos
+    # 위치 맞춘다음
+    if constType=='parent':
+        pm.delete( pm.parentConstraint( target, obj) )
+    elif constType=='point':
+        pm.delete( pm.pointConstraint( target, obj) )
+    
+    # 다시 롹
+    for attr in lockedAttrs:
+        attr.lock()
+    
 
-class Joint(object):
+class Struct(object):
+    ''' 리그 자료형 '''
+    def getList(self):
+        result = []
+        lst = self.__dict__.values()
+        for item in lst:
+            if pm.objExists(item.name()):
+                result.append( item )
+        return result
 
+class Eye(object):
+    '''
+    눈 조인트 생성
+    기본위치
+    
+    :example:
+    >> import sys
+    >> sys.path.append(r'D:\workspace_Git\Raven')
+    >> import raven
+    >> reload(raven)
+    >> leftEye = raven.facialJoint.Eye( side='L' )
+    
+    '''
     def __init__(self, side='L'):
-        '''초기화'''
         self.side = side
-
-    def create(self):
-        '''조인트 생성'''
-        # create joints
-        pm.select(cl=True)
-        jnt_eyeBall = pm.joint()
-        jnt_iris = pm.joint(p=(1, 0, 0))
-
-        pm.select(cl=True)
-        jnt_upperLid = pm.joint()
-        jnt_upperLidEnd = pm.joint(p=(1, 0, 0))
-
-        pm.select(cl=True)
-        jnt_lowerLid = pm.joint()
-        jnt_lowerLidEnd = pm.joint(p=(1, 0, 0))
-
-        # jointOrient
-        jnt_eyeBall.jointOrient.set(0, -90, 0)
-        jnt_upperLid.jointOrient.set(0, -90, 0)
-        jnt_lowerLid.jointOrient.set(0, -90, 0)
-
-        # set Joint Label
-        for jnt in [jnt_eyeBall, jnt_iris, jnt_upperLid, jnt_upperLidEnd, jnt_lowerLid, jnt_lowerLidEnd]:
+        self.joint = Struct()
+        self.template = Struct()
+       
+    def __importJoint(self):
+        ''' ma파일에서 조인트 얻어옴
+        
+        :memo: 
+            D:\workspace_Git\Raven\raven\files\eye_joint.ma
+            __file__/files/eye.ma
+        '''
+        # ma파일 오픈
+        tmp = __file__.replace('\\','/')
+        split = tmp.split('/')        
+        filePath = '/'.join(split[:-1]) + '/files/eye_joint.ma'
+        nodes = pm.importFile(filePath, returnNewNodes=True)  # @UnusedVariable
+        
+        # 필요 조인트들 등록
+        self.joint.eye          = pm.PyNode('TMP__eye__SIDE__jnt')
+        self.joint.eyeBall      = pm.PyNode('TMP__eyeBall__SIDE__jnt')
+        self.joint.eyeEnd       = pm.PyNode('TMP__eyeBallEnd__SIDE__jnt')
+        self.joint.upperLid     = pm.PyNode('TMP__upperLid__SIDE__jnt')
+        self.joint.upperLidEnd  = pm.PyNode('TMP__upperLidEnd__SIDE__jnt')
+        self.joint.lowerLid     = pm.PyNode('TMP__lowerLid__SIDE__jnt')
+        self.joint.lowerLidEnd  = pm.PyNode('TMP__lowerLidEnd__SIDE__jnt')
+          
+    def __importTemplate(self):
+        ''' ma파일에서 템플릿 얻어옴
+        
+        :memo: 
+            D:\workspace_Git\Raven\raven\files\eye_template.ma
+            __file__/files/eye.ma
+        '''
+        
+        # prefix정의 
+        prefix = 'tmpEye_%s_' % self.side
+        
+        # ma파일 오픈
+        tmp = __file__.replace('\\','/')
+        split = tmp.split('/')        
+        filePath = '/'.join(split[:-1]) + '/files/eye_template.ma'
+        nodes = pm.importFile( filePath, returnNewNodes=True, renameAll=True, renamingPrefix=prefix )  # @UnusedVariable
+        
+        # 필요 조인트들 등록 
+        if prefix:
+            prefix+='_'
+            
+        self.template.root_hdl     = pm.PyNode( prefix+'root_hdl')
+        #self.template.eye_rot
+        self.template.front        = pm.PyNode( prefix+'front_hdl')
+        self.template.up           = pm.PyNode( prefix+'up_hdl')        
+        self.template.iris         = pm.PyNode( prefix+'iris_hdl')
+        self.template.upperLid     = pm.PyNode( prefix+'upperLid_hdl')
+        self.template.lowerLid     = pm.PyNode( prefix+'lowerLid_hdl')
+        self.template.upperLid_zro = pm.PyNode( prefix+'upperLid_zro')
+        self.template.lowerLid_zro = pm.PyNode( prefix+'lowerLid_zro')      
+        self.template.upperLid_rot = pm.PyNode( prefix+'upperLid_rot')
+        self.template.lowerLid_rot = pm.PyNode( prefix+'lowerLid_rot')
+        self.template.const_grp    = pm.PyNode( prefix+'const_grp')        
+    
+    def createJoint(self):
+        ''' 조인트 생성 '''
+        
+        self.__importJoint()
+        jnts = self.joint.getList()
+        
+        # 신규이름 생성
+        # 원본 파일은 TMP__<jointName>__SIDE__jnt 형식으로 네이밍 되어 있음
+        newNames = []
+        for jnt in jnts:       
+            newName = jnt.name().replace('__SIDE__','_%s_'%self.side)
+            newName = newName.replace('TMP__','')        
+            newNames.append( newName )
+            #print newName
+        
+        # 씬에 같은 이름의 조인트가 있는지 체크
+        condition = False
+        for name in newNames:
+            if pm.objExists(name):
+                condition = True
+                
+        # 같은이름의 노드가 존재하면 에러 출력하고 중지.
+        if condition:
+            pm.select(jnts)
+            pm.delete(jnts)
+            raise NameError(u"같은이름의 노드가 이미 존재합니다.")
+        
+        # 이름변경, 라벨변경, 
+        for name, jnt in zip(newNames,jnts):
+            jnt.rename(name)
+            
             if self.side == 'L':
-                jnt.side.set(1)  # Left
-                jnt.typ.set(18)  # other
-
-            if self.side == 'R':
-                jnt.side.set(2)  # Right
-                jnt.typ.set(18)  # other
-
-        jnt_eyeBall.otherType.set('eyeBall')
-        jnt_iris.otherType.set('iris')
-        jnt_upperLid.otherType.set('upperLid')
-        jnt_lowerLid.otherType.set('lowerLid')
-        jnt_upperLidEnd.otherType.set('upperLidEnd')
-        jnt_lowerLidEnd.otherType.set('lowerLidEnd')
+                jnt.side.set(1)
+            elif self.side == 'R':
+                jnt.side.set(2)
+            elif self.side == 'C':
+                jnt.side.set(0)
+            else:
+                jnt.side.set(3)
+                
+            jnt.drawLabel.set(True)   
         
-        # return
-        self.jnt_eyeBall = jnt_eyeBall
-        self.jnt_iris = jnt_iris
-        self.jnt_upperLid = jnt_upperLid        
-        self.jnt_upperLidEnd = jnt_upperLidEnd
-        self.jnt_lowerLid = jnt_lowerLid
-        self.jnt_lowerLidEnd = jnt_lowerLidEnd
-
-    def attachToTemplate(self, template=None):
-        ''' 조인트 템플릿에 컨스트레인 '''
+    def rigTemplate(self):
+        # 조인트가 준비되지 않았으면 에러 출력. 중지.
+        if not self.joint.getList():
+            raise AttributeError(u"조인트가 준비되지 않았습니다.")
         
-        # TODO: Template 인스턴스 형식 오류검사
-        #template=Template()
+        #
+        # 템플릿 파일 임포트
+        #
+        self.__importTemplate()        
 
-        # get meta info
-        grp_eyeRig = template.rigGrp
-        loc_eyePos = template.eyePos
-        loc_irisPos = template.irisPos
-        loc_eyelidUp = template.eyelidUp
-        loc_upperLidPos = template.upperLidPos
-        loc_lowerLidPos = template.lowerLidPos
-        self.side = template.side
-
-        # create rig Append
-        grp_jntConst = pm.group(em=True, n='tmp_jntConst_grp')
-        pm.parent(grp_jntConst, grp_eyeRig, r=True)
-
-        # constraint
+        #
+        # 템플릿 위치 조인트에 맞춤 
+        #
+        self.joint.upperLid.r.set(0,0,0)
+        self.joint.lowerLid.r.set(0,0,0)
+        
+        snap( self.joint.eye, self.template.root_hdl, 'parent')
+        snap( self.joint.upperLidEnd, self.template.upperLid_zro, 'parent' )
+        snap( self.joint.lowerLidEnd, self.template.lowerLid_zro, 'parent' )
+        
+        # 템플릿을 살짝 띄움.
+        self.template.upperLid.tx.set(1)
+        self.template.lowerLid.tx.set(1)
+        
+        #
+        # 조인트를 템플릿에 구속
+        #
+        
+        # 루트
         consts = []
-        consts.append(pm.pointConstraint(loc_eyePos, self.jnt_eyeBall))
-        consts.append(pm.pointConstraint(loc_eyePos, self.jnt_upperLid))
-        consts.append(pm.pointConstraint(loc_eyePos, self.jnt_lowerLid))
+        consts.append( pm.pointConstraint( self.template.root_hdl, self.joint.eye ) )
+        consts.append( pm.aimConstraint( self.template.front, self.joint.eye, aim=(1,0,0), u=(0,1,0), wu=(0,1,0), wut='object', wuo=self.template.up ) )
+        
+        # 윗,아랫 눈꺼풀
+        self.template.upperLid_rot.rz >> self.joint.upperLid.joz
+        self.template.lowerLid_rot.rz >> self.joint.lowerLid.joz
+        
+        # 눈알
+        consts.append( pm.pointConstraint( self.template.iris, self.joint.eyeEnd ) )
+        
+        # 컨스트레인 노드 정리
+        pm.parent( consts, self.template.const_grp )
 
-        consts.append(pm.aimConstraint(loc_irisPos, self.jnt_eyeBall, aim=(1, 0, 0), u=(0, 1, 0), wut='objectRotation', wuo=grp_eyeRig))
-        consts.append(pm.aimConstraint(loc_upperLidPos, self.jnt_upperLid, aim=(1, 0, 0), u=(0, 1, 0), wut='object', wuo=loc_eyelidUp))
-        consts.append(pm.aimConstraint(loc_lowerLidPos, self.jnt_lowerLid, aim=(1, 0, 0), u=(0, 1, 0), wut='object', wuo=loc_eyelidUp))
 
-        consts.append(pm.pointConstraint(loc_irisPos, self.jnt_iris))
-        consts.append(pm.pointConstraint(loc_upperLidPos, self.jnt_upperLidEnd))
-        consts.append(pm.pointConstraint(loc_lowerLidPos, self.jnt_lowerLidEnd))
+class Jaw(object):
+    def __init__(self):
+        pass
+        
+    def createJoint(self):
+        pm.select(cl=True)
+        self.jaw = pm.joint()
+        pm.select(cl=True)
 
-        pm.parent(consts, grp_jntConst)
 
-def humanTemplate():
-    leftEye_tmp = Template('L')
-    leftEye_tmp.create()
-    leftEye_tmp.rigGrp.tx.set(5)
+def main():
+    centerEye = Eye( side='C' )
+    #leftEye = Eye( side='L' )
+    #rightEye = Eye( side='R' )
     
-    leftEye_Jnt = Joint('L')
-    leftEye_Jnt.create()
-    leftEye_Jnt.attachToTemplate(leftEye_tmp)
+    centerEye.createJoint()
+    #leftEye.createJoint()
+    #rightEye.createJoint()
     
-    rightEye_tmp = Template('R')
-    rightEye_tmp.create()
+    #print leftEye.joints
     
-    rightEye_Jnt = Joint('R')
-    rightEye_Jnt.create()
-    rightEye_Jnt.attachToTemplate(rightEye_tmp)
     
-    ut.rigSymTranslate( leftEye_tmp.rigGrp, rightEye_tmp.rigGrp )
+
     
