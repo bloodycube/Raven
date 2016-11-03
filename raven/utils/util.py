@@ -195,6 +195,7 @@ def rigSymTranslate(sourceObj, targetObj):
 def rigCurveConnect(*objs, **kwargs):
     '''
     update : 2015-04-15
+    update : 2016-11-03
     '''
     if objs:
         pm.select(objs)
@@ -214,12 +215,11 @@ def rigCurveConnect(*objs, **kwargs):
         
         for crvShp in obj.getShapes():
             if crvShp.hasAttr('curveConnectedLOC'):
-                try:
-                    deleteList.append( crvShp, crvShp.curveConnectedLOC.inputs(), crvShp.history( type='nurbsCurve')[-1] )
-                except:
-                    pass
+                deleteList = [ crvShp, crvShp.curveConnectedLOC.inputs(), crvShp.history( type='nurbsCurve')[-1] ]
+
         if deleteList:
             pm.delete( deleteList )
+            print deleteList
             
         return
 
@@ -266,7 +266,7 @@ def rigCurveConnect(*objs, **kwargs):
     # 선택
     pm.select(obj)
 
-    return loc   
+    return loc
 
 def vector_strToVec( inputVal ):
     '''

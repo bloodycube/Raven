@@ -22,13 +22,12 @@ eyeL.rigTemplate()
 import pymel.core as pm
 
 def snap(target, obj, constType):
-    # 롹 걸린 어트리뷰트 파악하고
+    # 롹 걸린 어트리뷰트 파악
     lockedAttrs = obj.listAttr( locked=True )
     
     # 롹을 잠깐 풀고
     for attr in lockedAttrs:
         attr.unlock()
-        print attr
         
     # 위치 맞춘다음
     if constType=='parent':
@@ -70,12 +69,8 @@ class Eye(object):
         self.template = Struct()
        
     def __importJoint(self):
-        ''' ma파일에서 조인트 얻어옴
+        ''' ma파일에서 조인트 임포트 '''
         
-        :memo: 
-            D:\workspace_Git\Raven\raven\files\eye_joint.ma
-            __file__/files/eye.ma
-        '''
         # ma파일 오픈
         tmp = __file__.replace('\\','/')
         split = tmp.split('/')        
@@ -92,12 +87,7 @@ class Eye(object):
         self.joint.lowerLidEnd  = pm.PyNode('TMP__lowerLidEnd__SIDE__jnt')
           
     def __importTemplate(self):
-        ''' ma파일에서 템플릿 얻어옴
-        
-        :memo: 
-            D:\workspace_Git\Raven\raven\files\eye_template.ma
-            __file__/files/eye.ma
-        '''
+        ''' ma파일에서 템플릿 임포트 '''
         
         # prefix정의 
         prefix = 'tmpEye_%s_' % self.side
@@ -112,18 +102,26 @@ class Eye(object):
         if prefix:
             prefix+='_'
             
-        self.template.root_hdl     = pm.PyNode( prefix+'root_hdl')
-        #self.template.eye_rot
-        self.template.front        = pm.PyNode( prefix+'front_hdl')
-        self.template.up           = pm.PyNode( prefix+'up_hdl')        
-        self.template.iris         = pm.PyNode( prefix+'iris_hdl')
-        self.template.upperLid     = pm.PyNode( prefix+'upperLid_hdl')
-        self.template.lowerLid     = pm.PyNode( prefix+'lowerLid_hdl')
-        self.template.upperLid_zro = pm.PyNode( prefix+'upperLid_zro')
-        self.template.lowerLid_zro = pm.PyNode( prefix+'lowerLid_zro')      
-        self.template.upperLid_rot = pm.PyNode( prefix+'upperLid_rot')
-        self.template.lowerLid_rot = pm.PyNode( prefix+'lowerLid_rot')
-        self.template.const_grp    = pm.PyNode( prefix+'const_grp')        
+        self.template.root             = pm.PyNode( prefix+'root')
+        self.template.eye_pos          = pm.PyNode( prefix+'eye_pos')
+        self.template.eye_aim          = pm.PyNode( prefix+'eye_aim')
+        self.template.eye_up           = pm.PyNode( prefix+'eye_up')
+        self.template.eye_rot          = pm.PyNode( prefix+'eye_rot')     
+        self.template.iris_pos         = pm.PyNode( prefix+'iris_pos')
+        self.template.upperLid_aim     = pm.PyNode( prefix+'upperLid_aim')
+        self.template.lowerLid_aim     = pm.PyNode( prefix+'lowerLid_aim')
+        self.template.upperLid_pos     = pm.PyNode( prefix+'upperLid_pos')
+        self.template.lowerLid_pos     = pm.PyNode( prefix+'lowerLid_pos')
+        
+        self.template.eye_aim_zro      = pm.PyNode( prefix+'eye_aim_zro')
+        self.template.iris_pos_zro     = pm.PyNode( prefix+'iris_pos_zro')
+        self.template.upperLid_aim_zro = pm.PyNode( prefix+'upperLid_aim_zro')
+        self.template.lowerLid_aim_zro = pm.PyNode( prefix+'lowerLid_aim_zro')
+        self.template.upperLid_pos_zro = pm.PyNode( prefix+'upperLid_pos_zro')
+        self.template.lowerLid_pos_zro = pm.PyNode( prefix+'lowerLid_pos_zro')    
+        self.template.upperLid_rot     = pm.PyNode( prefix+'upperLid_rot')
+        self.template.lowerLid_rot     = pm.PyNode( prefix+'lowerLid_rot')
+        self.template.const_grp        = pm.PyNode( prefix+'const_grp')        
     
     def createJoint(self):
         ''' 조인트 생성 '''
@@ -168,44 +166,55 @@ class Eye(object):
             jnt.drawLabel.set(True)   
         
     def rigTemplate(self):
+        ''' 조인트에 템플릿 구속 '''
+        
         # 조인트가 준비되지 않았으면 에러 출력. 중지.
         if not self.joint.getList():
             raise AttributeError(u"조인트가 준비되지 않았습니다.")
         
+        # ----------------------------------
         #
         # 템플릿 파일 임포트
         #
+        # ----------------------------------
         self.__importTemplate()        
 
+        # ----------------------------------
         #
-        # 템플릿 위치 조인트에 맞춤 
+        # 조인트에 템플릿 위치시킴
         #
+        # ----------------------------------
         self.joint.upperLid.r.set(0,0,0)
         self.joint.lowerLid.r.set(0,0,0)
         
-        snap( self.joint.eye, self.template.root_hdl, 'parent')
-        snap( self.joint.upperLidEnd, self.template.upperLid_zro, 'parent' )
-        snap( self.joint.lowerLidEnd, self.template.lowerLid_zro, 'parent' )
+        snap( self.joint.eye,         self.template.root,             'parent' )
+        snap( self.joint.eyeEnd,      self.template.eye_aim_zro,      'parent' )
+        snap( self.joint.eyeEnd,      self.template.iris_pos_zro,     'parent' )
+        snap( self.joint.upperLidEnd, self.template.upperLid_aim_zro, 'parent' )
+        snap( self.joint.lowerLidEnd, self.template.lowerLid_aim_zro, 'parent' )
+        snap( self.joint.upperLidEnd, self.template.upperLid_pos_zro, 'parent' )
+        snap( self.joint.lowerLidEnd, self.template.lowerLid_pos_zro, 'parent' )
         
         # 템플릿을 살짝 띄움.
-        self.template.upperLid.tx.set(1)
-        self.template.lowerLid.tx.set(1)
+        self.template.upperLid_aim.tx.set(1)
+        self.template.lowerLid_aim.tx.set(1)
+        self.template.eye_aim.tx.set(2)
         
+        # ----------------------------------
         #
-        # 조인트를 템플릿에 구속
+        # 템플릿에 조인트 컨스트레인
         #
+        # ----------------------------------
         
-        # 루트
+        # 로테이션 우선 처리 > 포지션 처리
         consts = []
-        consts.append( pm.pointConstraint( self.template.root_hdl, self.joint.eye ) )
-        consts.append( pm.aimConstraint( self.template.front, self.joint.eye, aim=(1,0,0), u=(0,1,0), wu=(0,1,0), wut='object', wuo=self.template.up ) )
-        
-        # 윗,아랫 눈꺼풀
         self.template.upperLid_rot.rz >> self.joint.upperLid.joz
-        self.template.lowerLid_rot.rz >> self.joint.lowerLid.joz
-        
-        # 눈알
-        consts.append( pm.pointConstraint( self.template.iris, self.joint.eyeEnd ) )
+        self.template.lowerLid_rot.rz >> self.joint.lowerLid.joz                
+        consts.append( pm.orientConstraint( self.template.eye_rot,     self.joint.eye ) )
+        consts.append( pm.pointConstraint( self.template.eye_pos,      self.joint.eye ) )        
+        consts.append( pm.pointConstraint( self.template.upperLid_pos, self.joint.upperLidEnd ) )
+        consts.append( pm.pointConstraint( self.template.lowerLid_pos, self.joint.lowerLidEnd ) )
+        consts.append( pm.pointConstraint( self.template.iris_pos,     self.joint.eyeEnd ) )
         
         # 컨스트레인 노드 정리
         pm.parent( consts, self.template.const_grp )
