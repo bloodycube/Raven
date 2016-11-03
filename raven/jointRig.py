@@ -50,17 +50,119 @@ class Struct(object):
                 result.append( item )
         return result
 
+
+class RigModule(object):
+    def __init__(self):
+        self._jointFile    = None
+        self._templateFile = None
+        self._templatePrefix = ''
+        self._jointList = []
+        
+        self.side = None        
+        
+        self.joint    = Struct()
+        self.template = Struct()
+        self.rig      = Struct()
+    
+    def __importJoint(self):
+        ''' ma파일에서 조인트 임포트 
+        
+        :note:
+            ma파일 조정시 export selection으로 파일 업데이트 할것.
+        '''
+
+        # ma파일 오픈
+        tmp = __file__.replace('\\','/')
+        split = tmp.split('/')        
+        filePath = '/'.join(split[:-1]) + '/files/' + self._jointFile
+        
+        # 임포트
+        # nodes = pm.importFile( filePath, returnNewNodes=True, renameAll=True, renamingPrefix=self.jointPefix )  # @UnusedVariable     
+        pm.importFile( filePath )  # @UnusedVariable
+
+    def isJointExists(self):
+        ''' 필요 조인트가 존재하는지 체크 '''
+        
+        # 필요한 목록이 정의되어 있지 않으면 에러
+        if not self._jointList:
+            raise AttributeError(u"필요한 조인트가 정의 되어 있지 않습니다.")
+        
+        # 조인트가 존재하는지 확인
+        cond = False
+        for jnt in self._jointList:
+            if pm.objExists(jnt):
+                cond = True
+        
+        # 결과 리턴      
+        return cond
+    
+    def registJoint(self):
+        ''' 조인트 등록 '''
+        # 이미 조인트가 존재하면 에러, 중지.
+        if not self.isJointExists():
+            raise AttributeError(u"필요한 조인트가 존재하지 않습니다.")
+        
+    def createJoint(self):
+        ''' 조인트 생성 '''
+        # 이미 조인트가 존재하면 에러, 중지.
+        if self.isJointExists():
+            raise AttributeError(u"조인트가 이미 존재합니다.")
+        
+        # 조인트를 파일에서 임포트
+        self.__importJoint()
+        
+        # 임포트된 조인트 등록
+        self.registJoint()
+        
+    def __importTemplate(self):
+        ''' ma파일에서 조인트 임포트 
+        
+        :note:
+            ma파일 조정시 export selection으로 파일 업데이트 할것.
+        '''
+
+        # ma파일 오픈
+        tmp   = __file__.replace('\\','/')
+        split = tmp.split('/')        
+        filePath = '/'.join(split[:-1]) + '/files/' + self._templateFile
+        
+        # 임포트
+        nodes = pm.importFile( filePath, returnNewNodes=True, renameAll=True, renamingPrefix=self._templatePrefix )  # @UnusedVariable  
+         
+    def isTemplateExists(self):
+        return False
+
+    def registTemplate(self):
+        ''' 템플릿 등록 '''
+        if not self.isTemplateExists():
+            raise AttributeError(u"필요한 템플릿 노드가 존재하지 않습니다.")
+        
+    def createTemplate(self):
+        # 필요한 조인트가 존재하지 않으면 에러.
+        if not self.isJointExists():
+            raise AttributeError(u"필요한 조인트가 존재하지 않습니다.")
+        
+        # 템플릿을 파일에서 임포트
+        self.__importTemplate()
+        
+        # 템플릿 등록
+        self.registTemplate()
+                
+
 class Eye(object):
     '''
     눈 조인트 생성
     기본위치
     
     :example:
-    >> import sys
-    >> sys.path.append(r'D:\workspace_Git\Raven')
-    >> import raven
-    >> reload(raven)
-    >> leftEye = raven.facialJoint.Eye( side='L' )
+        import sys
+        sys.path.append(r'D:\workspace_Git\Raven')
+        
+        import raven
+        reload(raven)
+        eyeL = raven.jointRig.Eye( side='L' )
+        eyeL.createJoint()
+        eyeL.rigTemplate()
     
     '''
     def __init__(self, side='L'):
@@ -181,7 +283,8 @@ class Eye(object):
             else:
                 jnt.side.set(3)
                 
-            jnt.drawLabel.set(True)   
+            if jnt.otherType.get() in ['eye','iris','upperLidEnd','lowerLidEnd']:
+                jnt.drawLabel.set(True)   
 
     def rigTemplate(self):
         ''' 조인트에 템플릿 구속 '''
@@ -241,15 +344,29 @@ class Eye(object):
         pass
     
     
-class Jaw(object):
+class Head(RigModule):
     def __init__(self):
-        pass
+        super(Head,self).__init__()  
+              
+        self._jointFile    = 'head_joint.ma'
+        self._templateFile = 'head_template.ma'
+        self._jointList   = ['neck_jnt','head_jnt','headEnd_jnt']
+        self._templatePrefix = 'headTmp'
+        
+    def registJoint(self):
+        super(Head,self).registJoint()
+              
+        # 필요 노드 등록
+        self.joint.neck         = pm.PyNode( 'neck_jnt' )
+        self.joint.head         = pm.PyNode( 'head_jnt' )
+        self.joint.headEnd      = pm.PyNode( 'headEnd_jnt' )
         
     def createJoint(self):
-        pm.select(cl=True)
-        self.jaw = pm.joint()
-        pm.select(cl=True)
-
+        super(Head,self).createJoint()
+        
+    def createTemplate(self):
+        pass
+        
 
 def main():
     centerEye = Eye( side='C' )
