@@ -1,8 +1,8 @@
 #import blendShape
 #reload(blendShape)
 
-from raven import facialJoint
-reload(facialJoint)
+from raven import jointRig
+reload(jointRig)
 
 from blendShape import test
 

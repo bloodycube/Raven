@@ -64,33 +64,50 @@ class Eye(object):
     
     '''
     def __init__(self, side='L'):
-        self.side = side
-        self.joint = Struct()
+        self.side     = side
+        self.joint    = Struct()
         self.template = Struct()
-       
+        self.rig      = Struct()
+  
     def __importJoint(self):
-        ''' ma파일에서 조인트 임포트 '''
+        ''' ma파일에서 조인트 임포트 
         
+        :note:
+            ma파일 조정시 export selection으로 파일 업데이트 할것.
+        '''
+
+        # prefix정의 
+        prefix = 'tmpJoint_' 
+
         # ma파일 오픈
         tmp = __file__.replace('\\','/')
         split = tmp.split('/')        
         filePath = '/'.join(split[:-1]) + '/files/eye_joint.ma'
-        nodes = pm.importFile(filePath, returnNewNodes=True)  # @UnusedVariable
+        nodes = pm.importFile( filePath, returnNewNodes=True, renameAll=True, renamingPrefix=prefix )  # @UnusedVariable
         
-        # 필요 조인트들 등록
-        self.joint.eye          = pm.PyNode('TMP__eye__SIDE__jnt')
-        self.joint.eyeBall      = pm.PyNode('TMP__eyeBall__SIDE__jnt')
-        self.joint.eyeEnd       = pm.PyNode('TMP__eyeBallEnd__SIDE__jnt')
-        self.joint.upperLid     = pm.PyNode('TMP__upperLid__SIDE__jnt')
-        self.joint.upperLidEnd  = pm.PyNode('TMP__upperLidEnd__SIDE__jnt')
-        self.joint.lowerLid     = pm.PyNode('TMP__lowerLid__SIDE__jnt')
-        self.joint.lowerLidEnd  = pm.PyNode('TMP__lowerLidEnd__SIDE__jnt')
-          
+        # 프리픽스 조정 : 임포트시 자동으로 '_'캐릭터가 붙음
+        if prefix:
+            prefix+='_'
+        self.__jointPefix = prefix
+            
+        # 필요 노드 등록
+        self.joint.eye          = pm.PyNode( prefix+'eye__SIDE__jnt' )
+        self.joint.eyeBall      = pm.PyNode( prefix+'eyeBall__SIDE__jnt' )
+        self.joint.iris         = pm.PyNode( prefix+'iris__SIDE__jnt' )
+        self.joint.upperLid     = pm.PyNode( prefix+'upperLid__SIDE__jnt' )
+        self.joint.upperLidEnd  = pm.PyNode( prefix+'upperLidEnd__SIDE__jnt' )
+        self.joint.lowerLid     = pm.PyNode( prefix+'lowerLid__SIDE__jnt' )
+        self.joint.lowerLidEnd  = pm.PyNode( prefix+'lowerLidEnd__SIDE__jnt' )
+      
     def __importTemplate(self):
-        ''' ma파일에서 템플릿 임포트 '''
+        ''' ma파일에서 템플릿 임포트 
+        
+        :note:
+            ma파일 조정시 export selection으로 파일 업데이트 할것.
+        '''
         
         # prefix정의 
-        prefix = 'tmpEye_%s_' % self.side
+        prefix = 'eye_%s_temp_' % self.side
         
         # ma파일 오픈
         tmp = __file__.replace('\\','/')
@@ -98,10 +115,11 @@ class Eye(object):
         filePath = '/'.join(split[:-1]) + '/files/eye_template.ma'
         nodes = pm.importFile( filePath, returnNewNodes=True, renameAll=True, renamingPrefix=prefix )  # @UnusedVariable
         
-        # 필요 조인트들 등록 
+        # 프리픽스 조정 : 임포트시 자동으로 '_'캐릭터가 붙음
         if prefix:
             prefix+='_'
             
+        # 필요 노드 등록
         self.template.root             = pm.PyNode( prefix+'root')
         self.template.eye_pos          = pm.PyNode( prefix+'eye_pos')
         self.template.eye_aim          = pm.PyNode( prefix+'eye_aim')
@@ -122,7 +140,7 @@ class Eye(object):
         self.template.upperLid_rot     = pm.PyNode( prefix+'upperLid_rot')
         self.template.lowerLid_rot     = pm.PyNode( prefix+'lowerLid_rot')
         self.template.const_grp        = pm.PyNode( prefix+'const_grp')        
-    
+
     def createJoint(self):
         ''' 조인트 생성 '''
         
@@ -134,7 +152,7 @@ class Eye(object):
         newNames = []
         for jnt in jnts:       
             newName = jnt.name().replace('__SIDE__','_%s_'%self.side)
-            newName = newName.replace('TMP__','')        
+            newName = newName.replace( self.__jointPefix,'')        
             newNames.append( newName )
             #print newName
         
@@ -164,7 +182,7 @@ class Eye(object):
                 jnt.side.set(3)
                 
             jnt.drawLabel.set(True)   
-        
+
     def rigTemplate(self):
         ''' 조인트에 템플릿 구속 '''
         
@@ -188,8 +206,8 @@ class Eye(object):
         self.joint.lowerLid.r.set(0,0,0)
         
         snap( self.joint.eye,         self.template.root,             'parent' )
-        snap( self.joint.eyeEnd,      self.template.eye_aim_zro,      'parent' )
-        snap( self.joint.eyeEnd,      self.template.iris_pos_zro,     'parent' )
+        snap( self.joint.iris,        self.template.eye_aim_zro,      'parent' )
+        snap( self.joint.iris,        self.template.iris_pos_zro,     'parent' )
         snap( self.joint.upperLidEnd, self.template.upperLid_aim_zro, 'parent' )
         snap( self.joint.lowerLidEnd, self.template.lowerLid_aim_zro, 'parent' )
         snap( self.joint.upperLidEnd, self.template.upperLid_pos_zro, 'parent' )
@@ -214,12 +232,15 @@ class Eye(object):
         consts.append( pm.pointConstraint( self.template.eye_pos,      self.joint.eye ) )        
         consts.append( pm.pointConstraint( self.template.upperLid_pos, self.joint.upperLidEnd ) )
         consts.append( pm.pointConstraint( self.template.lowerLid_pos, self.joint.lowerLidEnd ) )
-        consts.append( pm.pointConstraint( self.template.iris_pos,     self.joint.eyeEnd ) )
+        consts.append( pm.pointConstraint( self.template.iris_pos,     self.joint.iris ) )
         
         # 컨스트레인 노드 정리
         pm.parent( consts, self.template.const_grp )
 
-
+    def rig(self):
+        pass
+    
+    
 class Jaw(object):
     def __init__(self):
         pass
