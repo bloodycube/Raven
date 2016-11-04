@@ -268,6 +268,7 @@ def rigCurveConnect(*objs, **kwargs):
 
     return loc
 
+
 def vector_strToVec( inputVal ):
     '''
     Abstract
@@ -492,7 +493,6 @@ def strToVec( inputVal ):
     # 그 외의 값이 입력된경우 
     else:
         return dt.Vector( inputVal )
-
 
 
 def jntOrient( objs=[], orient=True, aimAxis='x', upAxis='y', worldAimVector='x', worldUpVector='y', worldUpType='scene'):

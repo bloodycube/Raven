@@ -1,6 +1,6 @@
 //Maya ASCII 2017 scene
 //Name: head_joint.ma
-//Last modified: Thu, Nov 03, 2016 12:34:33 PM
+//Last modified: Fri, Nov 04, 2016 10:35:52 AM
 //Codeset: 949
 requires maya "2017";
 currentUnit -l centimeter -a degree -t film;
@@ -16,7 +16,7 @@ createNode joint -n "neck_jnt";
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" -90 -21.801409486351844 90 ;
 	setAttr ".typ" 7;
-	setAttr ".radi" 0.72681886933454343;
+	setAttr ".radi" 0.5;
 createNode joint -n "head_jnt" -p "neck_jnt";
 	rename -uid "174341A0-4CF5-418F-E458-B5BB8B461A9C";
 	setAttr ".t" -type "double3" 5.3851648071345055 1.3322676295501878e-015 5.9787339602818175e-016 ;
@@ -25,7 +25,7 @@ createNode joint -n "head_jnt" -p "neck_jnt";
 	setAttr ".jo" -type "double3" -9.0993518255460163e-016 -4.7249134173197779e-015 
 		21.80140948635183 ;
 	setAttr ".typ" 8;
-	setAttr ".radi" 1.0172413793103448;
+	setAttr ".radi" 0.5;
 createNode joint -n "headEnd_jnt" -p "head_jnt";
 	rename -uid "FC99268A-48A1-A43C-4515-C99CC15A5204";
 	setAttr ".t" -type "double3" 11 1.9428902930940239e-015 9.0711825604275772e-016 ;
@@ -33,7 +33,7 @@ createNode joint -n "headEnd_jnt" -p "head_jnt";
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 18;
 	setAttr ".otp" -type "string" "HeadEnd";
-	setAttr ".radi" 1.0172413793103448;
+	setAttr ".radi" 0.5;
 select -ne :time1;
 	setAttr ".o" 1;
 	setAttr ".unw" 1;
