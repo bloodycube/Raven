@@ -1,19 +1,19 @@
 //Maya ASCII 2017 scene
 //Name: head_template.ma
-//Last modified: Fri, Nov 04, 2016 06:12:30 PM
-//Codeset: 949
+//Last modified: Mon, Nov 07, 2016 03:54:05 AM
+//Codeset: UTF-8
 requires maya "2017";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
 fileInfo "product" "Maya 2017";
 fileInfo "version" "2017";
-fileInfo "cutIdentifier" "201608291545-1001872";
-fileInfo "osv" "Microsoft Windows 7 Business Edition, 64-bit Windows 7 Service Pack 1 (Build 7601)\n";
+fileInfo "cutIdentifier" "201606150345-997974";
+fileInfo "osv" "Mac OS X 10.12.1";
 createNode transform -n "root";
 	rename -uid "C91747A4-4198-978C-2AC3-FD98C03BE128";
 	setAttr ".ove" yes;
 	setAttr ".ovc" 13;
-	setAttr ".t" -type "double3" -5.9787338831956039e-016 5 2 ;
+	setAttr ".t" -type "double3" -0.70097049789536192 5.0000000000000009 0 ;
 	setAttr ".r" -type "double3" -89.999999999999972 0 89.999999999999972 ;
 	setAttr ".dh" yes;
 	setAttr ".uocol" yes;
@@ -22,7 +22,7 @@ createNode transform -n "hdl_grp" -p "root";
 	rename -uid "9C3F89A6-4C27-50BB-38DF-908ABEBAD7EA";
 createNode transform -n "head_up_zro" -p "hdl_grp";
 	rename -uid "220B765D-446A-9586-D049-8BAB94226F1C";
-	setAttr ".t" -type "double3" 12 -2.2204460492503131e-015 3.8031680382394827e-015 ;
+	setAttr ".t" -type "double3" 12 -2.2204460492503131e-15 3.8031680382394827e-15 ;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 1 0 ;
 createNode transform -n "head_up" -p "head_up_zro";
@@ -39,21 +39,6 @@ createNode transform -n "head_up" -p "head_up_zro";
 	setAttr ".dh" yes;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 0.5 0.5 0 ;
-createNode nurbsCurve -n "head_upShape" -p "head_up";
-	rename -uid "8CEDBFBD-431F-9E03-DBD9-859AF4437864";
-	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".cc" -type "nurbsCurve" 
-		1 1 0 no 3
-		2 0 1
-		2
-		0 0 0
-		-1.9998000199980002 4.4408920985006262e-016 -3.7900397590393027e-015
-		;
-	setAttr ".ipo" yes;
 createNode nurbsCurve -n "head_upShapeOriginal" -p "head_up";
 	rename -uid "94F35EA1-4CFB-3429-0C91-EDA37C2186F2";
 	setAttr -k off ".v";
@@ -65,9 +50,53 @@ createNode nurbsCurve -n "head_upShapeOriginal" -p "head_up";
 		0 0 0
 		0 0 0
 		;
+createNode nurbsCurve -n "head_upShape" -p "head_up";
+	rename -uid "4EF7B9B2-7048-DA49-9AB3-D3BE24364A71";
+	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
+		-at "message";
+	setAttr -k off ".v";
+	setAttr ".tw" yes;
+	setAttr ".ipo" yes;
+createNode nurbsCurve -n "head_upShapeOriginal1" -p "head_up";
+	rename -uid "B41D27DB-114A-7F04-E4E7-CDAB50D641B1";
+	setAttr -k off ".v";
+	setAttr ".io" yes;
+	setAttr ".cc" -type "nurbsCurve" 
+		1 1 0 no 3
+		2 0 1
+		2
+		0 0 0
+		0 0 0
+		;
+createNode transform -n "headEnd_pos_locator1" -p "head_up";
+	rename -uid "1C4CBFB9-964C-8B0B-81D3-4391A58687DA";
+	setAttr ".v" no;
+	setAttr ".r" -type "double3" 89.999999999999986 89.999999999999943 0 ;
+createNode locator -n "headEnd_pos_locatorShape1" -p "headEnd_pos_locator1";
+	rename -uid "C99455D2-A54E-6708-E0FF-1598F7FC65E3";
+	setAttr -k off ".v" no;
+createNode pointConstraint -n "headEnd_pos_pointConst1" -p "headEnd_pos_locator1";
+	rename -uid "BD6BF015-A446-63AC-EF3B-2BB0D5EC2D27";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "headEnd_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 3.8430187101810666e-15 15 2.0000000000000018 ;
+	setAttr -k on ".w0";
 createNode transform -n "head_back_zro" -p "hdl_grp";
 	rename -uid "307931A0-41B3-A679-775E-EBADA9D2D5D5";
-	setAttr ".t" -type "double3" 0 5 5.7931375494497503e-016 ;
+	setAttr ".t" -type "double3" 0 5 5.7931375494497503e-16 ;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 1 0 ;
 createNode transform -n "head_back" -p "head_back_zro";
@@ -84,21 +113,6 @@ createNode transform -n "head_back" -p "head_back_zro";
 	setAttr ".dh" yes;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 0.5 0.5 0 ;
-createNode nurbsCurve -n "head_backShape" -p "head_back";
-	rename -uid "83744EF1-4FB1-CAF1-F49B-8295E51510C2";
-	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".cc" -type "nurbsCurve" 
-		1 1 0 no 3
-		2 0 1
-		2
-		0 0 0
-		0 -4.9995000928241744 1.2911737794200881e-008
-		;
-	setAttr ".ipo" yes;
 createNode nurbsCurve -n "head_backShapeOriginal" -p "head_back";
 	rename -uid "B9868FF1-43AA-5375-7F27-1B901287E32C";
 	setAttr -k off ".v";
@@ -110,13 +124,57 @@ createNode nurbsCurve -n "head_backShapeOriginal" -p "head_back";
 		0 0 0
 		0 0 0
 		;
+createNode nurbsCurve -n "head_backShape" -p "head_back";
+	rename -uid "7CA74470-AC4D-41DC-035B-2CAE8A70D3B8";
+	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
+		-at "message";
+	setAttr -k off ".v";
+	setAttr ".tw" yes;
+	setAttr ".ipo" yes;
+createNode nurbsCurve -n "head_backShapeOriginal1" -p "head_back";
+	rename -uid "92B4AFAE-CB48-ED90-9BF3-718C893C197E";
+	setAttr -k off ".v";
+	setAttr ".io" yes;
+	setAttr ".cc" -type "nurbsCurve" 
+		1 1 0 no 3
+		2 0 1
+		2
+		0 0 0
+		0 0 0
+		;
+createNode transform -n "head_pos_locator2" -p "head_back";
+	rename -uid "736F46EA-9147-2100-A29D-249E5404F9FB";
+	setAttr ".v" no;
+	setAttr ".r" -type "double3" 89.999999999999986 89.999999999999943 0 ;
+createNode locator -n "head_pos_locatorShape2" -p "head_pos_locator2";
+	rename -uid "340C429E-894F-B2D5-F787-FBAC7E95AD76";
+	setAttr -k off ".v" no;
+createNode pointConstraint -n "head_pos_pointConst2" -p "head_pos_locator2";
+	rename -uid "846F22BF-744E-AAD4-B22D-AA8B2907EBBA";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "head_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -5.9787338831956039e-16 5 2 ;
+	setAttr -k on ".w0";
 createNode transform -n "head_pos" -p "hdl_grp";
 	rename -uid "9433DD19-4D23-F860-81B8-EDB03CC0320E";
 createNode transform -n "headEnd_zro" -p "head_pos";
 	rename -uid "BE75BCC4-4870-D8AE-0F52-F5B67196A7FC";
 	setAttr ".ove" yes;
 	setAttr ".ovc" 5;
-	setAttr ".t" -type "double3" 10 -1.9428902930940239e-015 0 ;
+	setAttr ".t" -type "double3" 10 -1.9428902930940239e-15 0 ;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 1 0 ;
 createNode transform -n "headEnd_pos" -p "headEnd_zro";
@@ -133,21 +191,6 @@ createNode transform -n "headEnd_pos" -p "headEnd_zro";
 	setAttr -l on -k off ".sy";
 	setAttr -l on -k off ".sz";
 	setAttr ".dh" yes;
-createNode nurbsCurve -n "headEnd_posShape" -p "headEnd_pos";
-	rename -uid "D5B2FA92-4FDC-DDC3-41E7-74B6A8A6EB42";
-	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".cc" -type "nurbsCurve" 
-		1 1 0 no 3
-		2 0 1
-		2
-		0 0 0
-		-9.9990000999900008 1.7763568394002505e-015 1.2748000424233248e-017
-		;
-	setAttr ".ipo" yes;
 createNode nurbsCurve -n "headEnd_posShapeOriginal" -p "headEnd_pos";
 	rename -uid "10F73EF5-4B25-EE68-1607-6C9641ABEA18";
 	setAttr -k off ".v";
@@ -159,14 +202,57 @@ createNode nurbsCurve -n "headEnd_posShapeOriginal" -p "headEnd_pos";
 		0 0 0
 		0 0 0
 		;
+createNode nurbsCurve -n "headEnd_posShape" -p "headEnd_pos";
+	rename -uid "4105E315-8145-E704-4E43-30BAE992203E";
+	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
+		-at "message";
+	setAttr -k off ".v";
+	setAttr ".tw" yes;
+	setAttr ".ipo" yes;
+createNode nurbsCurve -n "headEnd_posShapeOriginal1" -p "headEnd_pos";
+	rename -uid "EB520AC2-304B-DEA3-9764-B2AE1A8310CE";
+	setAttr -k off ".v";
+	setAttr ".io" yes;
+	setAttr ".cc" -type "nurbsCurve" 
+		1 1 0 no 3
+		2 0 1
+		2
+		0 0 0
+		0 0 0
+		;
+createNode transform -n "head_pos_locator1" -p "headEnd_pos";
+	rename -uid "3FC93AA2-0145-17FC-44C4-6F9980DD53E0";
+	setAttr ".v" no;
+	setAttr ".r" -type "double3" 89.999999999999986 89.999999999999943 0 ;
+createNode locator -n "head_pos_locatorShape1" -p "head_pos_locator1";
+	rename -uid "0D5851AF-E94F-2358-AB25-BA804E3353D1";
+	setAttr -k off ".v" no;
+createNode pointConstraint -n "head_pos_pointConst1" -p "head_pos_locator1";
+	rename -uid "6D980A67-8C4D-47E3-8D2E-88BC5892CCCA";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "head_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -5.9787338831956039e-16 5 2 ;
+	setAttr -k on ".w0";
 createNode transform -n "neck_rot" -p "head_pos";
 	rename -uid "2B49813B-48CE-3FBB-9FB4-BCBA8374DC83";
-	setAttr ".t" -type "double3" 4.2833456781465884e-008 1.2913029534544762e-008 -1.0649521640718244e-024 ;
-	setAttr ".r" -type "double3" -179.99999999999994 1.4756782077829983e-014 158.19859071549109 ;
+	setAttr ".t" -type "double3" 4.2833456781465884e-08 1.2913029534544762e-08 -1.0649521640718244e-24 ;
 	setAttr ".s" -type "double3" 0.99999999999999989 1 1 ;
 createNode transform -n "neck_zro" -p "neck_rot";
 	rename -uid "D2478E46-4C46-0159-0CAC-ECA051FFC542";
-	setAttr ".t" -type "double3" 5.3851648421085958 -8.9264071689854063e-009 2.1521856384598619e-015 ;
+	setAttr ".t" -type "double3" 5.3851648421085958 -8.9264071689854063e-09 2.1521856384598619e-15 ;
 	setAttr ".r" -type "double3" 0 180 0 ;
 	setAttr ".s" -type "double3" 1.0000000000000002 1.0000000000000002 1 ;
 	setAttr ".uocol" yes;
@@ -176,7 +262,7 @@ createNode transform -n "neck_pos" -p "neck_zro";
 	setAttr -l on -k off ".v";
 	setAttr ".ove" yes;
 	setAttr ".ovc" 5;
-	setAttr ".t" -type "double3" 0 0 -9.8607613152626476e-032 ;
+	setAttr ".t" -type "double3" 0 0 -9.8607613152626476e-32 ;
 	setAttr -l on -k off ".ty";
 	setAttr -l on -k off ".tz";
 	setAttr -l on -k off ".rx";
@@ -186,21 +272,6 @@ createNode transform -n "neck_pos" -p "neck_zro";
 	setAttr -l on -k off ".sy";
 	setAttr -l on -k off ".sz";
 	setAttr ".dh" yes;
-createNode nurbsCurve -n "neck_posShape" -p "neck_pos";
-	rename -uid "304EB9C7-43F3-4237-03B0-B6B36EDADA14";
-	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".cc" -type "nurbsCurve" 
-		1 1 0 no 3
-		2 0 1
-		2
-		0 -3.944304526105059e-031 1.9721522630525295e-031
-		5.3846263604064131 -5.8734978861302589e-008 1.2911739866000542e-008
-		;
-	setAttr ".ipo" yes;
 createNode nurbsCurve -n "neck_posShapeOriginal" -p "neck_pos";
 	rename -uid "3647BD77-4DC2-795A-3B81-CC816A519E06";
 	setAttr -k off ".v";
@@ -212,9 +283,72 @@ createNode nurbsCurve -n "neck_posShapeOriginal" -p "neck_pos";
 		0 0 0
 		0 0 0
 		;
+createNode nurbsCurve -n "neck_posShape" -p "neck_pos";
+	rename -uid "DBD5623B-C04C-88C1-7341-3488496D454E";
+	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
+		-at "message";
+	setAttr -k off ".v";
+	setAttr ".tw" yes;
+	setAttr ".ipo" yes;
+createNode nurbsCurve -n "neck_posShapeOriginal1" -p "neck_pos";
+	rename -uid "BCC21D4C-A143-CA52-C79E-ACB00B0001DE";
+	setAttr -k off ".v";
+	setAttr ".io" yes;
+	setAttr ".cc" -type "nurbsCurve" 
+		1 1 0 no 3
+		2 0 1
+		2
+		0 0 0
+		0 0 0
+		;
+createNode transform -n "neck_rot_locator1" -p "neck_pos";
+	rename -uid "07BFF234-1C4E-3E4B-09A6-77A5751999CB";
+	setAttr ".v" no;
+	setAttr ".r" -type "double3" 68.198590715491093 89.999999999999929 0 ;
+	setAttr ".s" -type "double3" 1 0.99999999999999967 0.99999999999999978 ;
+createNode locator -n "neck_rot_locatorShape1" -p "neck_rot_locator1";
+	rename -uid "E8D134D4-5144-1726-E4D6-198FC6C84938";
+	setAttr -k off ".v" no;
+createNode pointConstraint -n "neck_rot_pointConst1" -p "neck_rot_locator1";
+	rename -uid "A134E156-7142-8479-69DA-4390634E1875";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "neck_rotW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -5.9787337396726933e-16 5.0000000428334568 1.9999999870869705 ;
+	setAttr -k on ".w0";
+createNode aimConstraint -n "neck_rot_aimConstraint1" -p "neck_rot";
+	rename -uid "132E2262-8C47-50F5-92F0-3C9C512F8A35";
+	addAttr -dcb 0 -ci true -sn "w0" -ln "neck_aimW0" -dv 1 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".wut" 1;
+	setAttr ".rsrr" -type "double3" -179.99999999999991 1.4756782077829983e-14 158.19859071549109 ;
+	setAttr -k on ".w0";
 createNode transform -n "neck_aim_zro" -p "head_pos";
 	rename -uid "01DCAAA0-406A-FB1B-8E47-33AA46724950";
-	setAttr ".t" -type "double3" -7.3526454885435388 2.9410581954174213 -2.0395842750170898e-015 ;
+	setAttr ".t" -type "double3" -7.3526454885435388 2.9410581954174213 -2.0395842750170898e-15 ;
 	setAttr ".r" -type "double3" 0 0 -21.801409486351851 ;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 1 0 ;
@@ -233,21 +367,6 @@ createNode transform -n "neck_aim" -p "neck_aim_zro";
 	setAttr ".dh" yes;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 0.5 0.5 0 ;
-createNode nurbsCurve -n "neck_aimShape" -p "neck_aim";
-	rename -uid "C0A24DD4-4EC0-A1A0-6767-32AD5C9EB9EA";
-	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
-	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
-		-at "message";
-	setAttr -k off ".v";
-	setAttr ".cc" -type "nurbsCurve" 
-		1 1 0 no 3
-		2 0 1
-		2
-		-4.4408920985006262e-016 6.9903150368647359e-018 9.8607613152626476e-031
-		2.5336233753761452 -1.6773990750823028e-015 -1.1259008876881582e-016
-		;
-	setAttr ".ipo" yes;
 createNode nurbsCurve -n "neck_aimShapeOriginal" -p "neck_aim";
 	rename -uid "B56A9013-4C38-E93D-53C1-EE8F432C8DE2";
 	setAttr -k off ".v";
@@ -259,6 +378,67 @@ createNode nurbsCurve -n "neck_aimShapeOriginal" -p "neck_aim";
 		0 0 0
 		0 0 0
 		;
+createNode nurbsCurve -n "neck_aimShape" -p "neck_aim";
+	rename -uid "5DAACCE0-7441-1BBB-46B0-CE8E0409E8D8";
+	addAttr -s false -ci true -sn "curveConnectedTo" -ln "curveConnectedTo" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedLOC" -ln "curveConnectedLOC" -at "message";
+	addAttr -s false -ci true -sn "curveConnectedOrgShape" -ln "curveConnectedOrgShape" 
+		-at "message";
+	setAttr -k off ".v";
+	setAttr ".tw" yes;
+	setAttr ".ipo" yes;
+createNode nurbsCurve -n "neck_aimShapeOriginal1" -p "neck_aim";
+	rename -uid "9756DD8D-5A44-29DD-485A-5991109D34EE";
+	setAttr -k off ".v";
+	setAttr ".io" yes;
+	setAttr ".cc" -type "nurbsCurve" 
+		1 1 0 no 3
+		2 0 1
+		2
+		0 0 0
+		0 0 0
+		;
+createNode transform -n "neck_pos_locator1" -p "neck_aim";
+	rename -uid "2D55CAE2-D94C-6DA7-9860-3D91DCF2C61C";
+	setAttr ".v" no;
+	setAttr ".r" -type "double3" 68.198590513648142 89.999999999999943 0 ;
+createNode locator -n "neck_pos_locatorShape1" -p "neck_pos_locator1";
+	rename -uid "A024DA87-BA4D-4483-1BC7-5B86696C0E51";
+	setAttr -k off ".v" no;
+createNode pointConstraint -n "neck_pos_pointConst1" -p "neck_pos_locator1";
+	rename -uid "BF49915D-7C45-E4B0-7F74-5BA80716031B";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "neck_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -1.5543122307307205e-15 -3.5527136788005009e-15 -3.5527136788005009e-15 ;
+	setAttr -k on ".w0";
+createNode aimConstraint -n "head_pos_aimConstraint1" -p "head_pos";
+	rename -uid "4B94FC2D-684A-9449-68EC-308E9A2EA178";
+	addAttr -dcb 0 -ci true -sn "w0" -ln "head_upW0" -dv 1 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".wut" 1;
+	setAttr -k on ".w0";
 createNode transform -n "rig_grp" -p "root";
 	rename -uid "4B46C056-423F-DB0E-2A40-7A8BD2577283";
 	setAttr ".v" no;
@@ -278,57 +458,79 @@ createNode transform -n "constMe_to_parent" -p "calc_jointOrient_grp";
 	rename -uid "EB8D7166-4C89-E101-2D0C-0580FA7614F8";
 createNode transform -n "neck_jo" -p "constMe_to_parent";
 	rename -uid "1968E281-4965-B2D6-87F6-F693FDBF92E6";
-	setAttr ".t" -type "double3" -1.5543122267665994e-015 -3.5527136788005009e-015 
-		-3.5527136788005009e-015 ;
-	setAttr ".r" -type "double3" -89.999999999999972 -21.80140948635184 90 ;
 createNode transform -n "head_jo" -p "neck_jo";
 	rename -uid "BCBE6BC9-4C7B-1752-E46A-4482ECFCB047";
-	setAttr ".t" -type "double3" 5.3851648071345082 6.8536815500708621e-016 2.3930795360932511e-016 ;
-	setAttr ".r" -type "double3" 1.1756037443598253e-015 6.1044193165305992e-015 21.80140948635183 ;
+createNode aimConstraint -n "head_jo_aimConstraint1" -p "head_jo";
+	rename -uid "69E19B23-D348-9C10-30B0-04AC1D3644F9";
+	addAttr -dcb 0 -ci true -sn "w0" -ln "head_upW0" -dv 1 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rsrr" -type "double3" 165.68368284729146 5.8281412246682009 43.499174056728101 ;
+	setAttr -k on ".w0";
+createNode pointConstraint -n "head_jo_pointConstraint1" -p "head_jo";
+	rename -uid "5296E1BA-5144-6C6E-AFC5-C28A010473ED";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "head_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 5.3851648266461263 1.7763568394002505e-15 -7.2164496600635175e-16 ;
+	setAttr -k on ".w0";
+createNode aimConstraint -n "neck_jo_aimConstraint1" -p "neck_jo";
+	rename -uid "BA056192-AB4F-FEC3-BC5E-A7A0A981F053";
+	addAttr -dcb 0 -ci true -sn "w0" -ln "head_posW0" -dv 1 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rsrr" -type "double3" 73.780669282017726 6.4957650515567984 88.115154506848953 ;
+	setAttr -k on ".w0";
+createNode pointConstraint -n "neck_jo_pointConstraint1" -p "neck_jo";
+	rename -uid "CFFF8481-6A49-8457-494C-749A52ED1805";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "neck_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -0.21387082703663257 3.1669051499719982 -4.299291469574241 ;
+	setAttr -k on ".w0";
 createNode transform -n "const_grp" -p "rig_grp";
 	rename -uid "15C4404F-42F1-936A-619F-318F2CA0C073";
-	setAttr ".t" -type "double3" 8.8817841970012523e-016 -3.3355350494384766 -0.29590487480163574 ;
-createNode transform -n "head_pos_locator1" -p "const_grp";
-	rename -uid "14813830-46B1-2A46-B183-62B0F925793E";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" -5.9787339602818195e-016 3.3355350066050198 0.29590488771466528 ;
-	setAttr ".r" -type "double3" 90 89.999999999999986 0 ;
-createNode locator -n "head_pos_locatorShape1" -p "head_pos_locator1";
-	rename -uid "A1DE8C37-4D6E-EF67-97F0-88A4114E06D5";
-	setAttr -k off ".v" no;
-createNode transform -n "neck_pos_locator1" -p "const_grp";
-	rename -uid "1F958423-4A9F-499A-3904-A589217CB31E";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" -5.0000000000000044 5.3355350494384801 0.29590487480163358 ;
-	setAttr ".r" -type "double3" 90 89.999999999999986 0 ;
-	setAttr ".s" -type "double3" 1 1 1.0000000000000002 ;
-createNode locator -n "neck_pos_locatorShape1" -p "neck_pos_locator1";
-	rename -uid "DDD9AD25-4D56-6370-9381-C590B3332439";
-	setAttr -k off ".v" no;
-createNode transform -n "head_pos_locator2" -p "const_grp";
-	rename -uid "9BB750F1-4199-9B2F-4E05-499531C2BD14";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" -5.9787339602818195e-016 3.3355350066050198 0.29590488771466528 ;
-	setAttr ".r" -type "double3" 90.000000000000014 89.999999999999929 0 ;
-createNode locator -n "head_pos_locatorShape2" -p "head_pos_locator2";
-	rename -uid "D23C14A9-4AC7-7FBC-6D6C-A991FD8FFFB9";
-	setAttr -k off ".v" no;
-createNode transform -n "headEnd_pos_locator1" -p "const_grp";
-	rename -uid "95D8C580-4863-CD85-AE00-3C976F1C1425";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" 10 3.3355350494384748 0.29590487480163574 ;
-	setAttr ".r" -type "double3" 89.999999999999986 89.999999999999957 0 ;
-createNode locator -n "headEnd_pos_locatorShape1" -p "headEnd_pos_locator1";
-	rename -uid "1643B7E5-4F2F-4C6F-5833-DCB95B69F656";
-	setAttr -k off ".v" no;
-createNode transform -n "rot_locator1" -p "const_grp";
-	rename -uid "B352747D-43B3-813C-7A7E-8590097212E7";
-	setAttr ".v" no;
-	setAttr ".t" -type "double3" -8.8817841970012523e-016 3.3355350494384766 0.29590487480163574 ;
-	setAttr ".r" -type "double3" 90 89.999999999999986 0 ;
-createNode locator -n "rot_locatorShape1" -p "rot_locator1";
-	rename -uid "F20AFE4C-4B03-D2B3-9E1B-9783D1F6D6B8";
-	setAttr -k off ".v" no;
+	setAttr ".t" -type "double3" 8.8817841970012523e-16 -3.3355350494384766 -0.29590487480163574 ;
 createNode transform -n "result_grp" -p "rig_grp";
 	rename -uid "6361083F-4A6A-FD37-26D1-6BBED10F4411";
 	setAttr -l on ".tx";
@@ -343,8 +545,6 @@ createNode transform -n "result_grp" -p "rig_grp";
 	setAttr ".it" no;
 createNode joint -n "result_neck" -p "result_grp";
 	rename -uid "A1FABE92-451F-5E55-C3D7-D69B4D25530F";
-	setAttr ".t" -type "double3" -1.5543122267665994e-015 -3.5527136788005009e-015 
-		-3.5527136788005009e-015 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 7;
@@ -353,7 +553,6 @@ createNode joint -n "result_neck" -p "result_grp";
 	setAttr ".oclr" -type "float3" 1 0 0 ;
 createNode joint -n "result_head" -p "result_neck";
 	rename -uid "123E86A0-4075-4E04-C426-378E76964341";
-	setAttr ".t" -type "double3" 5.3851648071345082 6.8536815500708621e-016 2.3930795360932511e-016 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 8;
@@ -362,7 +561,6 @@ createNode joint -n "result_head" -p "result_neck";
 	setAttr ".oclr" -type "float3" 1 0 0 ;
 createNode joint -n "result_headEnd" -p "result_head";
 	rename -uid "AD114E3F-4F57-B15E-05B0-C9A178E2E3B3";
-	setAttr ".t" -type "double3" 10 0 -4.234728858490911e-015 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 18;
@@ -370,6 +568,77 @@ createNode joint -n "result_headEnd" -p "result_head";
 	setAttr ".radi" 0.5;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 0 0 ;
+createNode pointConstraint -n "result_headEnd_pointConstraint1" -p "result_headEnd";
+	rename -uid "831D117C-0641-FC26-F1D2-31BCC0B91D81";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "headEnd_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 10.000000000000002 3.7747582837255322e-15 2.6367796834847468e-15 ;
+	setAttr -k on ".w0";
+createNode pointConstraint -n "result_head_pointConstraint1" -p "result_head";
+	rename -uid "460A8BC3-B146-BD70-3E9C-11B7EAE641BB";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "head_joW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 5.3851648266461289 -1.3322676295501878e-15 -1.5543122344752192e-15 ;
+	setAttr -k on ".w0";
+createNode pointConstraint -n "result_neck_pointConstraint1" -p "result_neck";
+	rename -uid "63DBC57E-6147-BCA3-023F-A58D23DB9BB4";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "neck_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" -1.017741858527796 0.79345446038455147 -3.5887952645036449 ;
+	setAttr -k on ".w0";
+createNode leastSquaresModifier -n "leastSquaresModifier1";
+	rename -uid "C73CC5AC-7A4F-0DC3-EAA7-20A7C8270913";
+	setAttr ".pc[0].puv" -type "double3" 1 1 1 ;
+	setAttr ".pc[0].pw" 1;
+createNode leastSquaresModifier -n "leastSquaresModifier4";
+	rename -uid "22E4E882-D34B-E0DF-68F2-0F9011BFBB44";
+	setAttr ".pc[0].puv" -type "double3" 1 1 1 ;
+	setAttr ".pc[0].pw" 1;
+createNode leastSquaresModifier -n "leastSquaresModifier2";
+	rename -uid "DD516023-2947-502A-F0D1-FB913280DA18";
+	setAttr ".pc[0].puv" -type "double3" 1 1 1 ;
+	setAttr ".pc[0].pw" 1;
+createNode leastSquaresModifier -n "leastSquaresModifier3";
+	rename -uid "812F335D-4849-AF7A-25DB-4DA53FF3E085";
+	setAttr ".pc[0].puv" -type "double3" 1 1 1 ;
+	setAttr ".pc[0].pw" 1;
+createNode leastSquaresModifier -n "leastSquaresModifier5";
+	rename -uid "40F90774-9941-7FDD-5AB8-D2A8923DBFB0";
+	setAttr ".pc[0].puv" -type "double3" 1 1 1 ;
+	setAttr ".pc[0].pw" 1;
 select -ne :time1;
 	setAttr ".o" 1;
 	setAttr ".unw" 1;
@@ -396,16 +665,205 @@ select -ne :defaultResolution;
 select -ne :hardwareRenderGlobals;
 	setAttr ".ctrs" 256;
 	setAttr ".btrs" 512;
+connectAttr "leastSquaresModifier1.ono" "head_upShape.cr";
 connectAttr "headEnd_pos.msg" "head_upShape.curveConnectedTo";
 connectAttr "headEnd_pos_locator1.msg" "head_upShape.curveConnectedLOC";
-connectAttr "head_pos_locator1.msg" "head_backShape.curveConnectedLOC";
+connectAttr "headEnd_pos_pointConst1.ctx" "headEnd_pos_locator1.tx";
+connectAttr "headEnd_pos_pointConst1.cty" "headEnd_pos_locator1.ty";
+connectAttr "headEnd_pos_pointConst1.ctz" "headEnd_pos_locator1.tz";
+connectAttr "headEnd_pos_locator1.pim" "headEnd_pos_pointConst1.cpim";
+connectAttr "headEnd_pos_locator1.rp" "headEnd_pos_pointConst1.crp";
+connectAttr "headEnd_pos_locator1.rpt" "headEnd_pos_pointConst1.crt";
+connectAttr "headEnd_pos.t" "headEnd_pos_pointConst1.tg[0].tt";
+connectAttr "headEnd_pos.rp" "headEnd_pos_pointConst1.tg[0].trp";
+connectAttr "headEnd_pos.rpt" "headEnd_pos_pointConst1.tg[0].trt";
+connectAttr "headEnd_pos.pm" "headEnd_pos_pointConst1.tg[0].tpm";
+connectAttr "headEnd_pos_pointConst1.w0" "headEnd_pos_pointConst1.tg[0].tw";
+connectAttr "leastSquaresModifier4.ono" "head_backShape.cr";
+connectAttr "head_pos.msg" "head_backShape.curveConnectedTo";
+connectAttr "head_pos_locator2.msg" "head_backShape.curveConnectedLOC";
+connectAttr "head_pos_pointConst2.ctx" "head_pos_locator2.tx";
+connectAttr "head_pos_pointConst2.cty" "head_pos_locator2.ty";
+connectAttr "head_pos_pointConst2.ctz" "head_pos_locator2.tz";
+connectAttr "head_pos_locator2.pim" "head_pos_pointConst2.cpim";
+connectAttr "head_pos_locator2.rp" "head_pos_pointConst2.crp";
+connectAttr "head_pos_locator2.rpt" "head_pos_pointConst2.crt";
+connectAttr "head_pos.t" "head_pos_pointConst2.tg[0].tt";
+connectAttr "head_pos.rp" "head_pos_pointConst2.tg[0].trp";
+connectAttr "head_pos.rpt" "head_pos_pointConst2.tg[0].trt";
+connectAttr "head_pos.pm" "head_pos_pointConst2.tg[0].tpm";
+connectAttr "head_pos_pointConst2.w0" "head_pos_pointConst2.tg[0].tw";
+connectAttr "head_pos_aimConstraint1.crx" "head_pos.rx";
+connectAttr "head_pos_aimConstraint1.cry" "head_pos.ry";
+connectAttr "head_pos_aimConstraint1.crz" "head_pos.rz";
+connectAttr "leastSquaresModifier2.ono" "headEnd_posShape.cr";
 connectAttr "head_pos.msg" "headEnd_posShape.curveConnectedTo";
-connectAttr "rot_locator1.msg" "headEnd_posShape.curveConnectedLOC";
-connectAttr "head_pos_locator2.msg" "neck_posShape.curveConnectedLOC";
+connectAttr "head_pos_locator1.msg" "headEnd_posShape.curveConnectedLOC";
+connectAttr "head_pos_pointConst1.ctx" "head_pos_locator1.tx";
+connectAttr "head_pos_pointConst1.cty" "head_pos_locator1.ty";
+connectAttr "head_pos_pointConst1.ctz" "head_pos_locator1.tz";
+connectAttr "head_pos_locator1.pim" "head_pos_pointConst1.cpim";
+connectAttr "head_pos_locator1.rp" "head_pos_pointConst1.crp";
+connectAttr "head_pos_locator1.rpt" "head_pos_pointConst1.crt";
+connectAttr "head_pos.t" "head_pos_pointConst1.tg[0].tt";
+connectAttr "head_pos.rp" "head_pos_pointConst1.tg[0].trp";
+connectAttr "head_pos.rpt" "head_pos_pointConst1.tg[0].trt";
+connectAttr "head_pos.pm" "head_pos_pointConst1.tg[0].tpm";
+connectAttr "head_pos_pointConst1.w0" "head_pos_pointConst1.tg[0].tw";
+connectAttr "neck_rot_aimConstraint1.crx" "neck_rot.rx";
+connectAttr "neck_rot_aimConstraint1.cry" "neck_rot.ry";
+connectAttr "neck_rot_aimConstraint1.crz" "neck_rot.rz";
+connectAttr "leastSquaresModifier3.ono" "neck_posShape.cr";
+connectAttr "neck_rot.msg" "neck_posShape.curveConnectedTo";
+connectAttr "neck_rot_locator1.msg" "neck_posShape.curveConnectedLOC";
+connectAttr "neck_rot_pointConst1.ctx" "neck_rot_locator1.tx";
+connectAttr "neck_rot_pointConst1.cty" "neck_rot_locator1.ty";
+connectAttr "neck_rot_pointConst1.ctz" "neck_rot_locator1.tz";
+connectAttr "neck_rot_locator1.pim" "neck_rot_pointConst1.cpim";
+connectAttr "neck_rot_locator1.rp" "neck_rot_pointConst1.crp";
+connectAttr "neck_rot_locator1.rpt" "neck_rot_pointConst1.crt";
+connectAttr "neck_rot.t" "neck_rot_pointConst1.tg[0].tt";
+connectAttr "neck_rot.rp" "neck_rot_pointConst1.tg[0].trp";
+connectAttr "neck_rot.rpt" "neck_rot_pointConst1.tg[0].trt";
+connectAttr "neck_rot.pm" "neck_rot_pointConst1.tg[0].tpm";
+connectAttr "neck_rot_pointConst1.w0" "neck_rot_pointConst1.tg[0].tw";
+connectAttr "neck_rot.pim" "neck_rot_aimConstraint1.cpim";
+connectAttr "neck_rot.t" "neck_rot_aimConstraint1.ct";
+connectAttr "neck_rot.rp" "neck_rot_aimConstraint1.crp";
+connectAttr "neck_rot.rpt" "neck_rot_aimConstraint1.crt";
+connectAttr "neck_rot.ro" "neck_rot_aimConstraint1.cro";
+connectAttr "neck_aim.t" "neck_rot_aimConstraint1.tg[0].tt";
+connectAttr "neck_aim.rp" "neck_rot_aimConstraint1.tg[0].trp";
+connectAttr "neck_aim.rpt" "neck_rot_aimConstraint1.tg[0].trt";
+connectAttr "neck_aim.pm" "neck_rot_aimConstraint1.tg[0].tpm";
+connectAttr "neck_rot_aimConstraint1.w0" "neck_rot_aimConstraint1.tg[0].tw";
+connectAttr "head_back.wm" "neck_rot_aimConstraint1.wum";
+connectAttr "leastSquaresModifier5.ono" "neck_aimShape.cr";
 connectAttr "neck_pos.msg" "neck_aimShape.curveConnectedTo";
 connectAttr "neck_pos_locator1.msg" "neck_aimShape.curveConnectedLOC";
+connectAttr "neck_pos_pointConst1.ctx" "neck_pos_locator1.tx";
+connectAttr "neck_pos_pointConst1.cty" "neck_pos_locator1.ty";
+connectAttr "neck_pos_pointConst1.ctz" "neck_pos_locator1.tz";
+connectAttr "neck_pos_locator1.pim" "neck_pos_pointConst1.cpim";
+connectAttr "neck_pos_locator1.rp" "neck_pos_pointConst1.crp";
+connectAttr "neck_pos_locator1.rpt" "neck_pos_pointConst1.crt";
+connectAttr "neck_pos.t" "neck_pos_pointConst1.tg[0].tt";
+connectAttr "neck_pos.rp" "neck_pos_pointConst1.tg[0].trp";
+connectAttr "neck_pos.rpt" "neck_pos_pointConst1.tg[0].trt";
+connectAttr "neck_pos.pm" "neck_pos_pointConst1.tg[0].tpm";
+connectAttr "neck_pos_pointConst1.w0" "neck_pos_pointConst1.tg[0].tw";
+connectAttr "head_pos.pim" "head_pos_aimConstraint1.cpim";
+connectAttr "head_pos.t" "head_pos_aimConstraint1.ct";
+connectAttr "head_pos.rp" "head_pos_aimConstraint1.crp";
+connectAttr "head_pos.rpt" "head_pos_aimConstraint1.crt";
+connectAttr "head_pos.ro" "head_pos_aimConstraint1.cro";
+connectAttr "head_up.t" "head_pos_aimConstraint1.tg[0].tt";
+connectAttr "head_up.rp" "head_pos_aimConstraint1.tg[0].trp";
+connectAttr "head_up.rpt" "head_pos_aimConstraint1.tg[0].trt";
+connectAttr "head_up.pm" "head_pos_aimConstraint1.tg[0].tpm";
+connectAttr "head_pos_aimConstraint1.w0" "head_pos_aimConstraint1.tg[0].tw";
+connectAttr "head_back.wm" "head_pos_aimConstraint1.wum";
+connectAttr "neck_jo_aimConstraint1.crx" "neck_jo.rx";
+connectAttr "neck_jo_aimConstraint1.cry" "neck_jo.ry";
+connectAttr "neck_jo_aimConstraint1.crz" "neck_jo.rz";
+connectAttr "neck_jo_pointConstraint1.ctx" "neck_jo.tx";
+connectAttr "neck_jo_pointConstraint1.cty" "neck_jo.ty";
+connectAttr "neck_jo_pointConstraint1.ctz" "neck_jo.tz";
+connectAttr "head_jo_aimConstraint1.crx" "head_jo.rx";
+connectAttr "head_jo_aimConstraint1.cry" "head_jo.ry";
+connectAttr "head_jo_aimConstraint1.crz" "head_jo.rz";
+connectAttr "head_jo_pointConstraint1.ctx" "head_jo.tx";
+connectAttr "head_jo_pointConstraint1.cty" "head_jo.ty";
+connectAttr "head_jo_pointConstraint1.ctz" "head_jo.tz";
+connectAttr "head_jo.pim" "head_jo_aimConstraint1.cpim";
+connectAttr "head_jo.t" "head_jo_aimConstraint1.ct";
+connectAttr "head_jo.rp" "head_jo_aimConstraint1.crp";
+connectAttr "head_jo.rpt" "head_jo_aimConstraint1.crt";
+connectAttr "head_jo.ro" "head_jo_aimConstraint1.cro";
+connectAttr "head_up.t" "head_jo_aimConstraint1.tg[0].tt";
+connectAttr "head_up.rp" "head_jo_aimConstraint1.tg[0].trp";
+connectAttr "head_up.rpt" "head_jo_aimConstraint1.tg[0].trt";
+connectAttr "head_up.pm" "head_jo_aimConstraint1.tg[0].tpm";
+connectAttr "head_jo_aimConstraint1.w0" "head_jo_aimConstraint1.tg[0].tw";
+connectAttr "head_jo.pim" "head_jo_pointConstraint1.cpim";
+connectAttr "head_jo.rp" "head_jo_pointConstraint1.crp";
+connectAttr "head_jo.rpt" "head_jo_pointConstraint1.crt";
+connectAttr "head_pos.t" "head_jo_pointConstraint1.tg[0].tt";
+connectAttr "head_pos.rp" "head_jo_pointConstraint1.tg[0].trp";
+connectAttr "head_pos.rpt" "head_jo_pointConstraint1.tg[0].trt";
+connectAttr "head_pos.pm" "head_jo_pointConstraint1.tg[0].tpm";
+connectAttr "head_jo_pointConstraint1.w0" "head_jo_pointConstraint1.tg[0].tw";
+connectAttr "neck_jo.pim" "neck_jo_aimConstraint1.cpim";
+connectAttr "neck_jo.t" "neck_jo_aimConstraint1.ct";
+connectAttr "neck_jo.rp" "neck_jo_aimConstraint1.crp";
+connectAttr "neck_jo.rpt" "neck_jo_aimConstraint1.crt";
+connectAttr "neck_jo.ro" "neck_jo_aimConstraint1.cro";
+connectAttr "head_pos.t" "neck_jo_aimConstraint1.tg[0].tt";
+connectAttr "head_pos.rp" "neck_jo_aimConstraint1.tg[0].trp";
+connectAttr "head_pos.rpt" "neck_jo_aimConstraint1.tg[0].trt";
+connectAttr "head_pos.pm" "neck_jo_aimConstraint1.tg[0].tpm";
+connectAttr "neck_jo_aimConstraint1.w0" "neck_jo_aimConstraint1.tg[0].tw";
+connectAttr "neck_jo.pim" "neck_jo_pointConstraint1.cpim";
+connectAttr "neck_jo.rp" "neck_jo_pointConstraint1.crp";
+connectAttr "neck_jo.rpt" "neck_jo_pointConstraint1.crt";
+connectAttr "neck_pos.t" "neck_jo_pointConstraint1.tg[0].tt";
+connectAttr "neck_pos.rp" "neck_jo_pointConstraint1.tg[0].trp";
+connectAttr "neck_pos.rpt" "neck_jo_pointConstraint1.tg[0].trt";
+connectAttr "neck_pos.pm" "neck_jo_pointConstraint1.tg[0].tpm";
+connectAttr "neck_jo_pointConstraint1.w0" "neck_jo_pointConstraint1.tg[0].tw";
 connectAttr "neck_jo.r" "result_neck.jo";
+connectAttr "result_neck_pointConstraint1.ctx" "result_neck.tx";
+connectAttr "result_neck_pointConstraint1.cty" "result_neck.ty";
+connectAttr "result_neck_pointConstraint1.ctz" "result_neck.tz";
 connectAttr "result_neck.s" "result_head.is";
 connectAttr "head_jo.r" "result_head.jo";
+connectAttr "result_head_pointConstraint1.ctx" "result_head.tx";
+connectAttr "result_head_pointConstraint1.cty" "result_head.ty";
+connectAttr "result_head_pointConstraint1.ctz" "result_head.tz";
 connectAttr "result_head.s" "result_headEnd.is";
+connectAttr "result_headEnd_pointConstraint1.ctx" "result_headEnd.tx";
+connectAttr "result_headEnd_pointConstraint1.cty" "result_headEnd.ty";
+connectAttr "result_headEnd_pointConstraint1.ctz" "result_headEnd.tz";
+connectAttr "result_headEnd.pim" "result_headEnd_pointConstraint1.cpim";
+connectAttr "result_headEnd.rp" "result_headEnd_pointConstraint1.crp";
+connectAttr "result_headEnd.rpt" "result_headEnd_pointConstraint1.crt";
+connectAttr "headEnd_pos.t" "result_headEnd_pointConstraint1.tg[0].tt";
+connectAttr "headEnd_pos.rp" "result_headEnd_pointConstraint1.tg[0].trp";
+connectAttr "headEnd_pos.rpt" "result_headEnd_pointConstraint1.tg[0].trt";
+connectAttr "headEnd_pos.pm" "result_headEnd_pointConstraint1.tg[0].tpm";
+connectAttr "result_headEnd_pointConstraint1.w0" "result_headEnd_pointConstraint1.tg[0].tw"
+		;
+connectAttr "result_head.pim" "result_head_pointConstraint1.cpim";
+connectAttr "result_head.rp" "result_head_pointConstraint1.crp";
+connectAttr "result_head.rpt" "result_head_pointConstraint1.crt";
+connectAttr "head_jo.t" "result_head_pointConstraint1.tg[0].tt";
+connectAttr "head_jo.rp" "result_head_pointConstraint1.tg[0].trp";
+connectAttr "head_jo.rpt" "result_head_pointConstraint1.tg[0].trt";
+connectAttr "head_jo.pm" "result_head_pointConstraint1.tg[0].tpm";
+connectAttr "result_head_pointConstraint1.w0" "result_head_pointConstraint1.tg[0].tw"
+		;
+connectAttr "result_neck.pim" "result_neck_pointConstraint1.cpim";
+connectAttr "result_neck.rp" "result_neck_pointConstraint1.crp";
+connectAttr "result_neck.rpt" "result_neck_pointConstraint1.crt";
+connectAttr "neck_pos.t" "result_neck_pointConstraint1.tg[0].tt";
+connectAttr "neck_pos.rp" "result_neck_pointConstraint1.tg[0].trp";
+connectAttr "neck_pos.rpt" "result_neck_pointConstraint1.tg[0].trt";
+connectAttr "neck_pos.pm" "result_neck_pointConstraint1.tg[0].tpm";
+connectAttr "result_neck_pointConstraint1.w0" "result_neck_pointConstraint1.tg[0].tw"
+		;
+connectAttr "head_upShapeOriginal1.ws" "leastSquaresModifier1.ino";
+connectAttr "head_upShape.wm" "leastSquaresModifier1.wto";
+connectAttr "headEnd_pos_locatorShape1.wp" "leastSquaresModifier1.pc[0].xyz";
+connectAttr "head_backShapeOriginal1.ws" "leastSquaresModifier4.ino";
+connectAttr "head_backShape.wm" "leastSquaresModifier4.wto";
+connectAttr "head_pos_locatorShape2.wp" "leastSquaresModifier4.pc[0].xyz";
+connectAttr "headEnd_posShapeOriginal1.ws" "leastSquaresModifier2.ino";
+connectAttr "headEnd_posShape.wm" "leastSquaresModifier2.wto";
+connectAttr "head_pos_locatorShape1.wp" "leastSquaresModifier2.pc[0].xyz";
+connectAttr "neck_posShapeOriginal1.ws" "leastSquaresModifier3.ino";
+connectAttr "neck_posShape.wm" "leastSquaresModifier3.wto";
+connectAttr "neck_rot_locatorShape1.wp" "leastSquaresModifier3.pc[0].xyz";
+connectAttr "neck_aimShapeOriginal1.ws" "leastSquaresModifier5.ino";
+connectAttr "neck_aimShape.wm" "leastSquaresModifier5.wto";
+connectAttr "neck_pos_locatorShape1.wp" "leastSquaresModifier5.pc[0].xyz";
 // End of head_template.ma

@@ -18,8 +18,6 @@ sys.path.append(r'D:\workspace_Git\Raven')
 
 import raven
 raven.test()
-<<<<<<< HEAD
 ```
-=======
-``` 
->>>>>>> branch 'master' of https://github.com/kyuhoChoi/Raven.git
+
+
