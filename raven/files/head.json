@@ -1,33 +1,38 @@
 {
     "joint": {
     	"file": "head_joint.ma",
-        "nodes": {
-            "headEnd": "headEnd_jnt", 
-            "head": "head_jnt", 
-            "neck": "neck_jnt"
-        }
+        "nodeList" : ["head__SIDE__jnt","headEnd__SIDE__jnt","neck__SIDE__jnt"],
+        
+        "head": "head__SIDE__jnt",
+        "headEnd": "headEnd__SIDE__jnt",
+        "neck": "neck__SIDE__jnt"
     },
+    
+    "rootJnt":"neck__SIDE__jnt",
+    "rootLay":"parent",
     
     "layout": {
         "file": "head_template.ma",
-		"const_grp" : "const_grp"
+		"const_grp" : "const_grp",
+		"constMe_to_parent" : "constMe_to_parent",
+		"nodeList" : ["root","head_up","head_back","neck_aim","result_neck","result_head","result_headEnd"]
     },
     
-    "snapLayHdlToJnt":[
-	    	{"hdl":"root", 			"jnt":"head_jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"head_up_zro", 	"jnt":"headEnd_jnt", 	"type":"parent", "offset":null},
-	    	{"hdl":"head_back_zro", "jnt":"head_jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"headEnd_zro", 	"jnt":"headEnd_jnt", 	"type":"parent", "offset":null},
-	    	{"hdl":"neck_aim_zro", 	"jnt":"neck_jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"neck_zro", 		"jnt":"neck_jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"head_up", 		"jnt":"headEnd_jnt", 	"type":"parent", "offset":[2,0,0]},
-	    	{"hdl":"head_back", 	"jnt":"head_jnt", 		"type":"parent", "offset":[0,5,0]},
-	    	{"hdl":"neck_aim", 		"jnt":"head_jnt", 		"type":"parent", "offset":[-2,0,0]}
+    "snap_layToJnt":[
+	    	{"hdl":"root", 			"jnt":"head__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"head_up_zro", 	"jnt":"headEnd__SIDE__jnt", 	"type":"parent", "offset":null},
+	    	{"hdl":"head_back_zro", "jnt":"head__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"headEnd_zro", 	"jnt":"headEnd__SIDE__jnt", 	"type":"parent", "offset":null},
+	    	{"hdl":"neck_aim_zro", 	"jnt":"neck__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"neck_zro", 		"jnt":"neck__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"head_up", 		"jnt":"headEnd__SIDE__jnt", 	"type":"parent", "offset":[2,0,0]},
+	    	{"hdl":"head_back", 	"jnt":"head__SIDE__jnt", 		"type":"parent", "offset":[0,5,0]},
+	    	{"hdl":"neck_aim", 		"jnt":"head__SIDE__jnt", 		"type":"parent", "offset":[-2,0,0]}
     	],
     
-    "constJntToLayHdl":[
-            {"outputNode":"result_neck",	"target":"neck_jnt"},
-        	{"outputNode":"result_head",	"target":"head_jnt"},
-        	{"outputNode":"result_headEnd", "target":"headEnd_jnt"}
+    "const_JntToLay":[
+            {"outputNode":"result_neck",	"target":"neck__SIDE__jnt"},
+        	{"outputNode":"result_head",	"target":"head__SIDE__jnt"},
+        	{"outputNode":"result_headEnd", "target":"headEnd__SIDE__jnt"}
     	]
 }

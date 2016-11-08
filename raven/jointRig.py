@@ -14,7 +14,7 @@ sys.path.append(r'D:\workspace_Git\Raven')
 
 import raven
 reload(raven)
-eyeL = raven.facialJoint.Eye( side='L' )
+eyeL = raven.facialJoint.Eye( __side='L' )
 eyeL.createJoint()
 eyeL.rigTemplate()
 '''
@@ -64,7 +64,7 @@ class RigModule(object):
         self._jointNode_checkList = []
         self._templateNode_checkList = []
         
-        self.side = None        
+        self.__side = None        
         
         self.joint    = Struct()
         self.template = Struct()
@@ -191,13 +191,13 @@ class Eye(object):
         
         import raven
         reload(raven)
-        eyeL = raven.jointRig.Eye( side='L' )
+        eyeL = raven.jointRig.Eye( __side='L' )
         eyeL.createJoint()
         eyeL.rigTemplate()
     
     '''
     def __init__(self, side='L'):
-        self.side     = side
+        self.__side     = side
         self.joint    = Struct()
         self.template = Struct()
         self.rig      = Struct()
@@ -240,7 +240,7 @@ class Eye(object):
         '''
         
         # prefix정의 
-        prefix = 'eye_%s_temp_' % self.side
+        prefix = 'eye_%s_temp_' % self.__side
         
         # ma파일 오픈
         tmp = __file__.replace('\\','/')
@@ -284,7 +284,7 @@ class Eye(object):
         # 원본 파일은 TMP__<jointName>__SIDE__jnt 형식으로 네이밍 되어 있음
         newNames = []
         for jnt in jnts:       
-            newName = jnt.name().replace('__SIDE__','_%s_'%self.side)
+            newName = jnt.name().replace('__SIDE__','_%s_'%self.__side)
             newName = newName.replace( self.__jointPefix,'')        
             newNames.append( newName )
             #print newName
@@ -305,14 +305,14 @@ class Eye(object):
         for name, jnt in zip(newNames,jnts):
             jnt.rename(name)
             
-            if self.side == 'L':
-                jnt.side.set(1)
-            elif self.side == 'R':
-                jnt.side.set(2)
-            elif self.side == 'C':
-                jnt.side.set(0)
+            if self.__side == 'L':
+                jnt.__side.set(1)
+            elif self.__side == 'R':
+                jnt.__side.set(2)
+            elif self.__side == 'C':
+                jnt.__side.set(0)
             else:
-                jnt.side.set(3)
+                jnt.__side.set(3)
                 
             if jnt.otherType.get() in ['eye','iris','upperLidEnd','lowerLidEnd']:
                 jnt.drawLabel.set(True)   
@@ -643,8 +643,8 @@ def headTest():
 
 def main():
     centerEye = Eye( side='C' )
-    #leftEye = Eye( side='L' )
-    #rightEye = Eye( side='R' )
+    #leftEye = Eye( __side='L' )
+    #rightEye = Eye( __side='R' )
     
     centerEye.createJoint()
     #leftEye.createJoint()

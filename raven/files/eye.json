@@ -1,0 +1,48 @@
+{
+    "joint": {
+    	"file": "eye_joint.ma",
+        "nodeList" : [
+        	"eye__SIDE__jnt",
+        	"eyeBall__SIDE__jnt",
+        	"iris__SIDE__jnt",
+        	"upperLid__SIDE__jnt",
+        	"upperLidEnd__SIDE__jnt",
+        	"lowerLid__SIDE__jnt",
+        	"lowerLidEnd__SIDE__jnt"
+        	]        
+    },
+    
+    "rootJnt":"eye__SIDE__jnt",
+    "rootLay":"parent",
+    
+    "layout": {
+        "file": "eye_template.ma",
+		"const_grp" : "const_grp",
+		"constMe_to_parent" : "constMe_to_parent",
+		"nodeList" : ["root","eye_up","eye_aim","upperLid_aim","iris_pos"]
+    },
+    
+    "snap_layToJnt":[
+	    	{"hdl":"root", 				"jnt":"eye__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"eye_aim_zro", 		"jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"iris_pos_zro", 		"jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"upperLid_aim_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},	    	
+	    	{"hdl":"upperLid_pos_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},
+	    	{"hdl":"lowerLid_aim_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},
+	    	{"hdl":"lowerLid_pos_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},
+	    	
+	    	{"hdl":"eye_aim", 	    "jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":[2,0,0]},
+	    	{"hdl":"upperLid_aim", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]},
+	    	{"hdl":"lowerLid_aim", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]}
+    	],
+    
+    "const_JntToLay":[
+            {"outputNode":"result_eye",			"target":"eye__SIDE__jnt"		},
+        	{"outputNode":"result_eyeBall",		"target":"eyeBall__SIDE__jnt"	},
+        	{"outputNode":"result_iris", 		"target":"iris__SIDE__jnt"		},
+        	{"outputNode":"result_upperLid",	"target":"upperLid__SIDE__jnt"	},
+        	{"outputNode":"result_upperLidEnd",	"target":"upperLidEnd__SIDE__jnt"},
+        	{"outputNode":"result_lowerLid", 	"target":"lowerLid__SIDE__jnt"	},
+        	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd__SIDE__jnt"}
+    	]
+}
