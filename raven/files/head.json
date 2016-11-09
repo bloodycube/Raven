@@ -1,22 +1,10 @@
 {
-    "joint": {
-    	"file": "head_joint.ma",
-        "nodeList" : ["head__SIDE__jnt","headEnd__SIDE__jnt","neck__SIDE__jnt"],
-        
-        "head": "head__SIDE__jnt",
-        "headEnd": "headEnd__SIDE__jnt",
-        "neck": "neck__SIDE__jnt"
-    },
-    
-    "rootJnt":"neck__SIDE__jnt",
-    "rootLay":"parent",
-    
-    "layout": {
-        "file": "head_template.ma",
-		"const_grp" : "const_grp",
-		"constMe_to_parent" : "constMe_to_parent",
-		"nodeList" : ["root","head_up","head_back","neck_aim","result_neck","result_head","result_headEnd"]
-    },
+      
+    "jointFile"     : "head_joint.ma",    
+    "layoutFile"    : "head_template.ma",    
+    "jointNodeList" : ["neck__SIDE__jnt", "head__SIDE__jnt", "headEnd__SIDE__jnt" ],
+    "layoutNodeList": ["root", "headEnd_pos", "constMe_to_parent", "headEnd_zro", "hdl_grp", "neck_zro", "result_neck", "head_up", "head_jo", "neck_jo", "parent", "rig_grp", "neck_aim", "result_head", "neck_aim_zro", "neck_pos", "head_pos", "head_up_zro", "neck_rot", "result_headEnd", "head_back_zro", "const_grp", "result_grp", "head_back", "calc_jointOrient_grp" ],
+    "rootJnt"       : ["neck__SIDE__jnt"],
     
     "snap_layToJnt":[
 	    	{"hdl":"root", 			"jnt":"head__SIDE__jnt", 		"type":"parent", "offset":null},

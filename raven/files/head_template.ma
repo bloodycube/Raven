@@ -1,6 +1,6 @@
 //Maya ASCII 2017 scene
 //Name: head_template.ma
-//Last modified: Tue, Nov 08, 2016 12:08:34 PM
+//Last modified: Wed, Nov 09, 2016 06:45:01 AM
 //Codeset: 949
 requires maya "2017";
 currentUnit -l centimeter -a degree -t film;
@@ -11,13 +11,12 @@ fileInfo "cutIdentifier" "201608291545-1001872";
 fileInfo "osv" "Microsoft Windows 7 Business Edition, 64-bit Windows 7 Service Pack 1 (Build 7601)\n";
 createNode transform -n "parent";
 	rename -uid "09C60ACA-4174-18BC-7466-35A8D83957A4";
-	setAttr ".t" -type "double3" 0 5 0 ;
+	setAttr ".t" -type "double3" 0 5.0000000000000009 0 ;
+	setAttr ".r" -type "double3" -89.999999999999972 0 89.999999999999972 ;
 createNode transform -n "root" -p "parent";
 	rename -uid "C91747A4-4198-978C-2AC3-FD98C03BE128";
 	setAttr ".ove" yes;
 	setAttr ".ovc" 13;
-	setAttr ".t" -type "double3" 0 8.8817841970012523e-016 0 ;
-	setAttr ".r" -type "double3" -89.999999999999972 0 89.999999999999972 ;
 	setAttr ".dh" yes;
 	setAttr ".uocol" yes;
 	setAttr ".oclr" -type "float3" 1 1 0 ;
@@ -446,6 +445,7 @@ createNode aimConstraint -n "head_pos_aimConstraint1" -p "head_pos";
 createNode transform -n "rig_grp" -p "root";
 	rename -uid "4B46C056-423F-DB0E-2A40-7A8BD2577283";
 	setAttr ".v" no;
+	setAttr ".it" no;
 createNode transform -n "calc_jointOrient_grp" -p "rig_grp";
 	rename -uid "97750C2D-4E50-BCDB-DA5A-86BEEA5FB9E3";
 	setAttr -l on ".tx";

@@ -1,6 +1,6 @@
 //Maya ASCII 2017 scene
 //Name: eye_template.ma
-//Last modified: Tue, Nov 08, 2016 12:04:12 PM
+//Last modified: Wed, Nov 09, 2016 06:45:44 AM
 //Codeset: 949
 requires maya "2017";
 currentUnit -l centimeter -a degree -t film;
@@ -348,6 +348,7 @@ createNode nurbsCurve -n "lowerLid_aimShapeOriginal" -p "lowerLid_aim";
 createNode transform -n "rig_grp" -p "root";
 	rename -uid "AB301280-419E-6B27-2192-AC91F0723F53";
 	setAttr ".v" no;
+	setAttr ".it" no;
 createNode transform -n "calc_jointOrient_grp" -p "rig_grp";
 	rename -uid "857D9EF5-427F-AE82-287E-78B7658222E2";
 	setAttr -l on ".tx";
@@ -364,7 +365,7 @@ createNode transform -n "constMe_to_parent" -p "calc_jointOrient_grp";
 	rename -uid "DA136452-4297-528A-9539-CF96D6AC5E7A";
 createNode transform -n "eye_jo" -p "constMe_to_parent";
 	rename -uid "B6E7122F-4582-5018-E730-3E92F98BE5DE";
-createNode aimConstraint -n "eye_jo_aimConstraint1" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo";
+createNode aimConstraint -n "eye_jo_aimConstraint1" -p "eye_jo";
 	rename -uid "CFAE9C93-4169-EDEA-24DD-869F3613AFD3";
 	addAttr -dcb 0 -ci true -sn "w0" -ln "eye_aimW0" -dv 1 -at "double";
 	setAttr -k on ".nds";
@@ -382,7 +383,7 @@ createNode aimConstraint -n "eye_jo_aimConstraint1" -p "|parent|root|rig_grp|cal
 	setAttr ".wut" 1;
 	setAttr ".rsrr" -type "double3" 0 -89.999999999999986 0 ;
 	setAttr -k on ".w0";
-createNode pointConstraint -n "eye_jo_pointConstraint1" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo";
+createNode pointConstraint -n "eye_jo_pointConstraint1" -p "eye_jo";
 	rename -uid "4DCADE2E-4808-C2F0-4F10-14B954D7A2C5";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "eye_posW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -398,10 +399,10 @@ createNode pointConstraint -n "eye_jo_pointConstraint1" -p "|parent|root|rig_grp
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
-createNode transform -n "eye_jo" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo";
+createNode transform -n "eyeBall_jo" -p "eye_jo";
 	rename -uid "14A54DC9-42D0-5C28-CB88-618D1E0E2CCE";
 	setAttr ".s" -type "double3" 0.99999999999999978 1 0.99999999999999978 ;
-createNode aimConstraint -n "eye_jo_aimConstraint2" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo";
+createNode aimConstraint -n "eye_jo_aimConstraint2" -p "eyeBall_jo";
 	rename -uid "FA6F4195-429A-2FF3-25CB-379CB8792949";
 	addAttr -dcb 0 -ci true -sn "w0" -ln "eye_aimW0" -dv 1 -at "double";
 	setAttr -k on ".nds";
@@ -418,7 +419,7 @@ createNode aimConstraint -n "eye_jo_aimConstraint2" -p "|parent|root|rig_grp|cal
 	setAttr ".erp" yes;
 	setAttr ".wut" 1;
 	setAttr -k on ".w0";
-createNode transform -n "upperLid_jo" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo";
+createNode transform -n "upperLid_jo" -p "eye_jo";
 	rename -uid "353CDACF-4441-CE3E-C219-75ADEFB6E234";
 	setAttr -l on ".tx";
 	setAttr -l on ".ty";
@@ -442,7 +443,7 @@ createNode aimConstraint -n "upperLid_jo_aimConstraint1" -p "upperLid_jo";
 	setAttr ".rsrr" -type "double3" -3.3811368288669352e-015 -1.9175379943924777e-014 
 		19.999999880705698 ;
 	setAttr -k on ".w0";
-createNode transform -n "lowerLid_jo" -p "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo";
+createNode transform -n "lowerLid_jo" -p "eye_jo";
 	rename -uid "13F7D277-4359-03ED-0EC8-29B9CB6F829E";
 	setAttr -l on ".tx";
 	setAttr -l on ".ty";
@@ -714,6 +715,7 @@ createNode parentConstraint -n "constMe_to_parentJoint_parentConstraint1" -p "co
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
+	setAttr ".lr" -type "double3" 0 -89.999999999999986 0 ;
 	setAttr -k on ".w0";
 createNode joint -n "result_eye" -p "constMe_to_parentJoint";
 	rename -uid "ADEE7DC3-4D1C-B8D2-E614-DFB2648D7A6C";
@@ -730,12 +732,28 @@ createNode joint -n "result_eyeBall" -p "result_eye";
 	setAttr ".radi" 0.5;
 createNode joint -n "result_iris" -p "result_eyeBall";
 	rename -uid "BB175AF1-4C97-52DE-DBB8-DD829381764C";
-	setAttr ".t" -type "double3" 5 0 -4.8985871965894128e-016 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 18;
 	setAttr ".otp" -type "string" "iris";
 	setAttr ".radi" 0.5;
+createNode pointConstraint -n "result_iris_pointConstraint1" -p "result_iris";
+	rename -uid "34DD9545-4793-B05B-50D6-1AA7A0219682";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "iris_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 4.9999999999999991 0 1.959434858008022e-015 ;
+	setAttr -k on ".w0";
 createNode joint -n "result_upperLid" -p "result_eye";
 	rename -uid "8EDEE46E-4709-C5F5-8292-158166C11356";
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
@@ -745,12 +763,28 @@ createNode joint -n "result_upperLid" -p "result_eye";
 	setAttr ".radi" 0.5;
 createNode joint -n "result_upperLidEnd" -p "result_upperLid";
 	rename -uid "3CACE7C1-45D2-84CA-1FE9-96BB79C145FC";
-	setAttr ".t" -type "double3" 5 0 -4.8985871965894128e-016 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 18;
 	setAttr ".otp" -type "string" "upperLidEnd";
 	setAttr ".radi" 0.5;
+createNode pointConstraint -n "result_upperLidEnd_pointConstraint1" -p "result_upperLidEnd";
+	rename -uid "14CCAFBB-4FFE-8A05-B6DD-B4BE5A6C8744";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "upperLid_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 5 6.6613381477509392e-016 1.1507915610999368e-015 ;
+	setAttr -k on ".w0";
 createNode joint -n "result_lowerLid" -p "result_eye";
 	rename -uid "BFD50227-4557-5942-257B-75A865B75293";
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
@@ -760,12 +794,28 @@ createNode joint -n "result_lowerLid" -p "result_eye";
 	setAttr ".radi" 0.5;
 createNode joint -n "result_lowerLidEnd" -p "result_lowerLid";
 	rename -uid "971B024B-4BD6-0D88-F76B-B9A6DB43C297";
-	setAttr ".t" -type "double3" 5 0 -4.8985871965894128e-016 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".typ" 18;
 	setAttr ".otp" -type "string" "lowerLidEnd";
 	setAttr ".radi" 0.5;
+createNode pointConstraint -n "result_lowerLidEnd_pointConstraint1" -p "result_lowerLidEnd";
+	rename -uid "8E5F32A3-4AD4-691D-2A57-ECA99852E309";
+	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "lowerLid_posW0" -dv 1 -min 0 -at "double";
+	setAttr -k on ".nds";
+	setAttr -k off ".v";
+	setAttr -k off ".tx";
+	setAttr -k off ".ty";
+	setAttr -k off ".tz";
+	setAttr -k off ".rx";
+	setAttr -k off ".ry";
+	setAttr -k off ".rz";
+	setAttr -k off ".sx";
+	setAttr -k off ".sy";
+	setAttr -k off ".sz";
+	setAttr ".erp" yes;
+	setAttr ".rst" -type "double3" 4.999999885920543 -1.0872527655969577e-007 7.8225716140421159e-016 ;
+	setAttr -k on ".w0";
 createNode pointConstraint -n "result_eye_pointConstraint1" -p "result_eye";
 	rename -uid "8A85EEBD-475D-0F47-8BC4-07A06564B87F";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "eye_posW0" -dv 1 -min 0 -at "double";
@@ -866,61 +916,39 @@ connectAttr "upperLid_pos_locator1.msg" "upperLid_aimShape.curveConnectedLOC";
 connectAttr "leastSquaresModifier7.ono" "lowerLid_aimShape.cr";
 connectAttr "lowerLid_pos.msg" "lowerLid_aimShape.curveConnectedTo";
 connectAttr "lowerLid_pos_locator1.msg" "lowerLid_aimShape.curveConnectedLOC";
-connectAttr "eye_jo_pointConstraint1.ctx" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.tx"
-		;
-connectAttr "eye_jo_pointConstraint1.cty" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.ty"
-		;
-connectAttr "eye_jo_pointConstraint1.ctz" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.tz"
-		;
-connectAttr "eye_jo_aimConstraint1.crx" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rx"
-		;
-connectAttr "eye_jo_aimConstraint1.cry" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.ry"
-		;
-connectAttr "eye_jo_aimConstraint1.crz" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rz"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.pim" "eye_jo_aimConstraint1.cpim"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.t" "eye_jo_aimConstraint1.ct"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rp" "eye_jo_aimConstraint1.crp"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rpt" "eye_jo_aimConstraint1.crt"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.ro" "eye_jo_aimConstraint1.cro"
-		;
+connectAttr "eye_jo_pointConstraint1.ctx" "eye_jo.tx";
+connectAttr "eye_jo_pointConstraint1.cty" "eye_jo.ty";
+connectAttr "eye_jo_pointConstraint1.ctz" "eye_jo.tz";
+connectAttr "eye_jo_aimConstraint1.crx" "eye_jo.rx";
+connectAttr "eye_jo_aimConstraint1.cry" "eye_jo.ry";
+connectAttr "eye_jo_aimConstraint1.crz" "eye_jo.rz";
+connectAttr "eye_jo.pim" "eye_jo_aimConstraint1.cpim";
+connectAttr "eye_jo.t" "eye_jo_aimConstraint1.ct";
+connectAttr "eye_jo.rp" "eye_jo_aimConstraint1.crp";
+connectAttr "eye_jo.rpt" "eye_jo_aimConstraint1.crt";
+connectAttr "eye_jo.ro" "eye_jo_aimConstraint1.cro";
 connectAttr "eye_aim.t" "eye_jo_aimConstraint1.tg[0].tt";
 connectAttr "eye_aim.rp" "eye_jo_aimConstraint1.tg[0].trp";
 connectAttr "eye_aim.rpt" "eye_jo_aimConstraint1.tg[0].trt";
 connectAttr "eye_aim.pm" "eye_jo_aimConstraint1.tg[0].tpm";
 connectAttr "eye_jo_aimConstraint1.w0" "eye_jo_aimConstraint1.tg[0].tw";
 connectAttr "eye_up.wm" "eye_jo_aimConstraint1.wum";
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.pim" "eye_jo_pointConstraint1.cpim"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rp" "eye_jo_pointConstraint1.crp"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.rpt" "eye_jo_pointConstraint1.crt"
-		;
+connectAttr "eye_jo.pim" "eye_jo_pointConstraint1.cpim";
+connectAttr "eye_jo.rp" "eye_jo_pointConstraint1.crp";
+connectAttr "eye_jo.rpt" "eye_jo_pointConstraint1.crt";
 connectAttr "eye_pos.t" "eye_jo_pointConstraint1.tg[0].tt";
 connectAttr "eye_pos.rp" "eye_jo_pointConstraint1.tg[0].trp";
 connectAttr "eye_pos.rpt" "eye_jo_pointConstraint1.tg[0].trt";
 connectAttr "eye_pos.pm" "eye_jo_pointConstraint1.tg[0].tpm";
 connectAttr "eye_jo_pointConstraint1.w0" "eye_jo_pointConstraint1.tg[0].tw";
-connectAttr "eye_jo_aimConstraint2.crx" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.rx"
-		;
-connectAttr "eye_jo_aimConstraint2.cry" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.ry"
-		;
-connectAttr "eye_jo_aimConstraint2.crz" "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.rz"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.pim" "eye_jo_aimConstraint2.cpim"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.t" "eye_jo_aimConstraint2.ct"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.rp" "eye_jo_aimConstraint2.crp"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.rpt" "eye_jo_aimConstraint2.crt"
-		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.ro" "eye_jo_aimConstraint2.cro"
-		;
+connectAttr "eye_jo_aimConstraint2.crx" "eyeBall_jo.rx";
+connectAttr "eye_jo_aimConstraint2.cry" "eyeBall_jo.ry";
+connectAttr "eye_jo_aimConstraint2.crz" "eyeBall_jo.rz";
+connectAttr "eyeBall_jo.pim" "eye_jo_aimConstraint2.cpim";
+connectAttr "eyeBall_jo.t" "eye_jo_aimConstraint2.ct";
+connectAttr "eyeBall_jo.rp" "eye_jo_aimConstraint2.crp";
+connectAttr "eyeBall_jo.rpt" "eye_jo_aimConstraint2.crt";
+connectAttr "eyeBall_jo.ro" "eye_jo_aimConstraint2.cro";
 connectAttr "eye_aim.t" "eye_jo_aimConstraint2.tg[0].tt";
 connectAttr "eye_aim.rp" "eye_jo_aimConstraint2.tg[0].trp";
 connectAttr "eye_aim.rpt" "eye_jo_aimConstraint2.tg[0].trt";
@@ -1103,21 +1131,55 @@ connectAttr "constMe_to_parent.pm" "constMe_to_parentJoint_parentConstraint1.tg[
 		;
 connectAttr "constMe_to_parentJoint_parentConstraint1.w0" "constMe_to_parentJoint_parentConstraint1.tg[0].tw"
 		;
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo.r" "result_eye.jo"
-		;
+connectAttr "eye_jo.r" "result_eye.jo";
 connectAttr "result_eye_pointConstraint1.ctx" "result_eye.tx";
 connectAttr "result_eye_pointConstraint1.cty" "result_eye.ty";
 connectAttr "result_eye_pointConstraint1.ctz" "result_eye.tz";
 connectAttr "result_eye.s" "result_eyeBall.is";
-connectAttr "|parent|root|rig_grp|calc_jointOrient_grp|constMe_to_parent|eye_jo|eye_jo.r" "result_eyeBall.jo"
-		;
+connectAttr "eyeBall_jo.r" "result_eyeBall.jo";
 connectAttr "result_eyeBall.s" "result_iris.is";
+connectAttr "result_iris_pointConstraint1.ctx" "result_iris.tx";
+connectAttr "result_iris_pointConstraint1.cty" "result_iris.ty";
+connectAttr "result_iris_pointConstraint1.ctz" "result_iris.tz";
+connectAttr "result_iris.pim" "result_iris_pointConstraint1.cpim";
+connectAttr "result_iris.rp" "result_iris_pointConstraint1.crp";
+connectAttr "result_iris.rpt" "result_iris_pointConstraint1.crt";
+connectAttr "iris_pos.t" "result_iris_pointConstraint1.tg[0].tt";
+connectAttr "iris_pos.rp" "result_iris_pointConstraint1.tg[0].trp";
+connectAttr "iris_pos.rpt" "result_iris_pointConstraint1.tg[0].trt";
+connectAttr "iris_pos.pm" "result_iris_pointConstraint1.tg[0].tpm";
+connectAttr "result_iris_pointConstraint1.w0" "result_iris_pointConstraint1.tg[0].tw"
+		;
 connectAttr "result_eye.s" "result_upperLid.is";
 connectAttr "upperLid_jo.r" "result_upperLid.jo";
 connectAttr "result_upperLid.s" "result_upperLidEnd.is";
+connectAttr "result_upperLidEnd_pointConstraint1.ctx" "result_upperLidEnd.tx";
+connectAttr "result_upperLidEnd_pointConstraint1.cty" "result_upperLidEnd.ty";
+connectAttr "result_upperLidEnd_pointConstraint1.ctz" "result_upperLidEnd.tz";
+connectAttr "result_upperLidEnd.pim" "result_upperLidEnd_pointConstraint1.cpim";
+connectAttr "result_upperLidEnd.rp" "result_upperLidEnd_pointConstraint1.crp";
+connectAttr "result_upperLidEnd.rpt" "result_upperLidEnd_pointConstraint1.crt";
+connectAttr "upperLid_pos.t" "result_upperLidEnd_pointConstraint1.tg[0].tt";
+connectAttr "upperLid_pos.rp" "result_upperLidEnd_pointConstraint1.tg[0].trp";
+connectAttr "upperLid_pos.rpt" "result_upperLidEnd_pointConstraint1.tg[0].trt";
+connectAttr "upperLid_pos.pm" "result_upperLidEnd_pointConstraint1.tg[0].tpm";
+connectAttr "result_upperLidEnd_pointConstraint1.w0" "result_upperLidEnd_pointConstraint1.tg[0].tw"
+		;
 connectAttr "result_eye.s" "result_lowerLid.is";
 connectAttr "lowerLid_jo.r" "result_lowerLid.jo";
 connectAttr "result_lowerLid.s" "result_lowerLidEnd.is";
+connectAttr "result_lowerLidEnd_pointConstraint1.ctx" "result_lowerLidEnd.tx";
+connectAttr "result_lowerLidEnd_pointConstraint1.cty" "result_lowerLidEnd.ty";
+connectAttr "result_lowerLidEnd_pointConstraint1.ctz" "result_lowerLidEnd.tz";
+connectAttr "result_lowerLidEnd.pim" "result_lowerLidEnd_pointConstraint1.cpim";
+connectAttr "result_lowerLidEnd.rp" "result_lowerLidEnd_pointConstraint1.crp";
+connectAttr "result_lowerLidEnd.rpt" "result_lowerLidEnd_pointConstraint1.crt";
+connectAttr "lowerLid_pos.t" "result_lowerLidEnd_pointConstraint1.tg[0].tt";
+connectAttr "lowerLid_pos.rp" "result_lowerLidEnd_pointConstraint1.tg[0].trp";
+connectAttr "lowerLid_pos.rpt" "result_lowerLidEnd_pointConstraint1.tg[0].trt";
+connectAttr "lowerLid_pos.pm" "result_lowerLidEnd_pointConstraint1.tg[0].tpm";
+connectAttr "result_lowerLidEnd_pointConstraint1.w0" "result_lowerLidEnd_pointConstraint1.tg[0].tw"
+		;
 connectAttr "result_eye.pim" "result_eye_pointConstraint1.cpim";
 connectAttr "result_eye.rp" "result_eye_pointConstraint1.crp";
 connectAttr "result_eye.rpt" "result_eye_pointConstraint1.crt";

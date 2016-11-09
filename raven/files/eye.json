@@ -1,27 +1,10 @@
 {
-    "joint": {
-    	"file": "eye_joint.ma",
-        "nodeList" : [
-        	"eye__SIDE__jnt",
-        	"eyeBall__SIDE__jnt",
-        	"iris__SIDE__jnt",
-        	"upperLid__SIDE__jnt",
-        	"upperLidEnd__SIDE__jnt",
-        	"lowerLid__SIDE__jnt",
-        	"lowerLidEnd__SIDE__jnt"
-        	]        
-    },
-    
-    "rootJnt":"eye__SIDE__jnt",
-    "rootLay":"parent",
-    
-    "layout": {
-        "file": "eye_template.ma",
-		"const_grp" : "const_grp",
-		"constMe_to_parent" : "constMe_to_parent",
-		"nodeList" : ["root","eye_up","eye_aim","upperLid_aim","iris_pos"]
-    },
-    
+    "jointFile"     : "eye_joint.ma",    
+    "layoutFile"    : "eye_template.ma",    
+    "jointNodeList" : ["eye__SIDE__jnt","eyeBall__SIDE__jnt","iris__SIDE__jnt","upperLid__SIDE__jnt","upperLidEnd__SIDE__jnt","lowerLid__SIDE__jnt","lowerLidEnd__SIDE__jnt"],
+    "layoutNodeList": [ "iris_pos_zro", "lowerLid_jo", "lowerLid_pos_zro", "constMe_to_parentJoint", "upperLid_jo", "eye_up_zro", "lowerLid_aim_zro", "result_upperLid", "eyeBall_jo", "upperLid_aim", "hdl_grp", "eye_aim", "rig_grp", "upperLid_aim_zro", "root", "result_eyeBall", "const_grp", "iris_pos", "eye_up", "calc_jointOrient_grp", "upperLid_pos_zro", "result_grp", "constMe_to_parent", "parent", "result_lowerLid", "result_lowerLidEnd", "lowerLid_aim", "eye_rot", "result_iris", "result_upperLidEnd", "upperLid_pos", "eye_pos", "upperLid_rot", "lowerLid_pos", "lowerLid_rot", "eye_aim_zro", "eye_jo", "result_eye" ],
+    "rootJnt"       : ["eye__SIDE__jnt"],
+   
     "snap_layToJnt":[
 	    	{"hdl":"root", 				"jnt":"eye__SIDE__jnt", 		"type":"parent", "offset":null},
 	    	{"hdl":"eye_aim_zro", 		"jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":null},
@@ -37,12 +20,12 @@
     	],
     
     "const_JntToLay":[
-            {"outputNode":"result_eye",			"target":"eye__SIDE__jnt"		},
-        	{"outputNode":"result_eyeBall",		"target":"eyeBall__SIDE__jnt"	},
-        	{"outputNode":"result_iris", 		"target":"iris__SIDE__jnt"		},
-        	{"outputNode":"result_upperLid",	"target":"upperLid__SIDE__jnt"	},
+            {"outputNode":"result_eye",			"target":"eye__SIDE__jnt"		 },
+        	{"outputNode":"result_eyeBall",		"target":"eyeBall__SIDE__jnt"	 },
+        	{"outputNode":"result_iris", 		"target":"iris__SIDE__jnt"		 },
+        	{"outputNode":"result_upperLid",	"target":"upperLid__SIDE__jnt"	 },
         	{"outputNode":"result_upperLidEnd",	"target":"upperLidEnd__SIDE__jnt"},
-        	{"outputNode":"result_lowerLid", 	"target":"lowerLid__SIDE__jnt"	},
+        	{"outputNode":"result_lowerLid", 	"target":"lowerLid__SIDE__jnt"	 },
         	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd__SIDE__jnt"}
     	]
 }

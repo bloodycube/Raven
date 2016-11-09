@@ -1,0 +1,23 @@
+{
+      
+    "jointFile"     : "jaw_joint.ma",    
+    "layoutFile"    : "jaw_template.ma",    
+    "jointNodeList" : ["jaw__SIDE__jnt", "jawEnd__SIDE__jnt","upperTeeth__SIDE__jnt","lowerTeeth__SIDE__jnt"],
+    "layoutNodeList": ["hdl_grp", "jaw_jo", "upperTeeth_result", "calc_jointOrient_grp", "lowerTeeth_jo", "jaw_result", "const_grp", "annotation3", "rig_grp", "lowerTeeth_result", "constMe_to_parent", "result_grp", "jaw_aim_up", "jaw_pos", "annotation1", "jawEnd_result", "constMe_to_parentJoint", "doNotTouch_grp", "lowerTeeth_pos", "annotation4", "parent", "jawEnd_pos", "upperTeeth_jo", "root", "jawEnd_jo", "jaw_pos_const", "upperTeeth_pos", "jawEnd_rot", "annotation2" ],
+    "rootJnt"       : ["jaw__SIDE__jnt","upperTeeth__SIDE__jnt"],
+    
+    "snap_layToJnt":[
+	    	{"hdl":"root", 		 	 "jnt":"jawEnd__SIDE__jnt", 	"type":"parent", "offset":null},
+	    	{"hdl":"jawEnd_pos", 	 "jnt":"jawEnd__SIDE__jnt", 	"type":"parent", "offset":null},
+	    	{"hdl":"jaw_pos", 	 	 "jnt":"jaw__SIDE__jnt", 		"type":"parent", "offset":null},
+	    	{"hdl":"upperTeeth_pos", "jnt":"upperTeeth__SIDE__jnt", "type":"parent", "offset":null},
+	    	{"hdl":"lowerTeeth_pos", "jnt":"lowerTeeth__SIDE__jnt", "type":"parent", "offset":null}
+    	],
+    
+    "const_JntToLay":[
+            {"outputNode":"jaw_result",	   		"target":"jaw__SIDE__jnt"},
+        	{"outputNode":"jawEnd_result", 		"target":"jawEnd__SIDE__jnt"},
+        	{"outputNode":"upperTeeth_result", 	"target":"upperTeeth__SIDE__jnt"},
+        	{"outputNode":"lowerTeeth_result", 	"target":"lowerTeeth__SIDE__jnt"}
+    	]
+}
