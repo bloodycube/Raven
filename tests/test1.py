@@ -48,21 +48,23 @@ leftEye.createLayout()
 # 스냅툴
 # rig.snap()
 
+# 눈 인스턴스 생성
+rightEye = rig.Eye('R')
+ 
+# 눈 조인트 생성
+rightEye.createJoint()
+ 
+# 조인트 레이아웃 생성
+rightEye.createLayout()
+ 
+# Symetry Rig
+#sym = rig.SymmetryRig( leftEye.layout.root,   rightEye.layout.root,   axis='z' )
+#sym = rig.SymmetryRig( leftEye.layout.eye_up, rightEye.layout.eye_up, axis='z' )
 
-#===============================================================================
-# # 눈 인스턴스 생성
-# rightEye = rig.Eye('R')
-# 
-# # 눈 조인트 생성
-# rightEye.createJoint()
-# 
-# # 조인트 레이아웃 생성
-# rightEye.createLayout()
-# 
-# # Symetry Rig
-# plane = 'xy'
-# sym = rig.rigSymTranslate( leftEye.layout.root, rightEye.layout.root )
-#===============================================================================
+reload(rig)
+rig.SymmetryRig( leftEye.layout.root, rightEye.layout.root, "head_jnt",  axis='z' )
+
+rig.SymmetryRig()
 
 
 jaw = rig.Jaw()
