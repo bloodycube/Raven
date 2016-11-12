@@ -39,188 +39,6 @@ def snap(*obj, **kwargs):
     for attr in lockedAttrs:
         attr.lock()
 
-class SymmetryRig2(object):
-    def __init__(self, inputNode=None, outputNode=None, orientNode=None, axis='x'):
-        '''
-        target, constraint, orient 순으로 선택
-        
-        '''
-        self.create()
-       
-        if   axis == 'x':
-            self.axis.set(1,0,0)
-        elif axis == 'y':
-            self.axis.set(0,1,0)
-        elif axis == 'z':
-            self.axis.set(0,0,1)            
-        else:
-            raise AttributeError(u"axis입력이 잘못됐습니다.")
-        
-        sel = ['','','']
-        if inputNode:
-            sel[0] = inputNode
-            
-        if outputNode:
-            sel[1] = outputNode
-            
-        if orientNode:
-            sel[3] = orientNode
-            
-        if sel:
-            pm.select(sel)
-            
-        if sel[0]:
-            self.setInput(sel[0])
-            
-        if sel[1]:
-            self.setInput(sel[1])
-        
-        if sel[2]:
-            self.setInput(sel[2])
-        
-    def create(self):        
-        # 노드 생성
-        root           = pm.group(n='root',           em=True)
-        input          = pm.group(n='input',          em=True)  # @ReservedAssignment
-        output         = pm.group(n='output',         em=True)
-        orient         = pm.group(n='orient',         em=True)
-        axisIn         = pm.group(n='axisIn',         em=True)
-        axisCalc       = pm.group(n='axisCalc',       em=True)
-        axisOut_Offset = pm.group(n='axisOut_offset', em=True)
-        axisOut        = pm.group(n='axisOut',        em=True)
-        const_grp      = pm.group(n='const_grp',      em=True)
-       
-        # 어트리뷰트 추가
-        root.addAttr( 'axis', at='double3' )
-        root.addAttr( 'axisX', at='double', parent='axis', keyable=True, dv=1, min=0, max=1 )
-        root.addAttr( 'axisY', at='double', parent='axis', keyable=True, dv=0, min=0, max=1 )
-        root.addAttr( 'axisZ', at='double', parent='axis', keyable=True, dv=0, min=0, max=1 )
-        root.addAttr( 'matchOrient',     at='double', keyable=True, dv=1, min=0, max=1 )
-        root.addAttr( 'showLocalAxis',   at='bool', keyable=True, dv=False )
-        root.addAttr( 'inTranslate',  at='double3' )
-        root.addAttr( 'inTranslateX', at='double', parent='inTranslate', keyable=True )
-        root.addAttr( 'inTranslateY', at='double', parent='inTranslate', keyable=True )
-        root.addAttr( 'inTranslateZ', at='double', parent='inTranslate', keyable=True )
-        root.addAttr( 'inRotate', at='double3' )
-        root.addAttr( 'inRotateX', at='double', parent='inRotate', keyable=True )
-        root.addAttr( 'inRotateY', at='double', parent='inRotate', keyable=True )
-        root.addAttr( 'inRotateZ', at='double', parent='inRotate', keyable=True )
-        root.addAttr( 'inRotateOrder', attributeType='enum', enumName='xyz:yzx:zxy:xzy:yxz:zyx' )
-        root.addAttr( 'inScale', at='double3' )
-        root.addAttr( 'inScaleX', at='double', parent='inScale', keyable=True )
-        root.addAttr( 'inScaleY', at='double', parent='inScale', keyable=True )
-        root.addAttr( 'inScaleZ', at='double', parent='inScale', keyable=True )
-        root.addAttr( 'outTranslate', at='double3' )
-        root.addAttr( 'outTranslateX', at='double', parent='outTranslate', keyable=True )
-        root.addAttr( 'outTranslateY', at='double', parent='outTranslate', keyable=True )
-        root.addAttr( 'outTranslateZ', at='double', parent='outTranslate', keyable=True )
-        root.addAttr( 'outRotate', at='double3' )
-        root.addAttr( 'outRotateX', at='double', parent='outRotate', keyable=True )
-        root.addAttr( 'outRotateY', at='double', parent='outRotate', keyable=True )
-        root.addAttr( 'outRotateZ', at='double', parent='outRotate', keyable=True )
-        root.addAttr( 'outRotateOrder', attributeType='enum', enumName='xyz:yzx:zxy:xzy:yxz:zyx' )
-        root.addAttr( 'outScale', at='double3' )
-        root.addAttr( 'outScaleX', at='double', parent='outScale', keyable=True )
-        root.addAttr( 'outScaleY', at='double', parent='outScale', keyable=True )
-        root.addAttr( 'outScaleZ', at='double', parent='outScale', keyable=True )
-        root.setAttr( 'tx', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'ty', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'tz', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'rx', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'ry', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'rz', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'sx', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'sy', keyable=False, lock=True, channelBox=False)
-        root.setAttr( 'sz', keyable=False, lock=True, channelBox=False)
-        root.setAttr(  'v', keyable=False, lock=True, channelBox=False)
-        
-        # Hiarachy
-        pm.parent( axisOut_Offset, axisOut )
-        pm.parent( axisOut, axisCalc )
-        pm.parent( axisIn, axisCalc, const_grp, orient )
-        pm.parent( input,output,orient, root)
-        pm.parent( axisIn, axisCalc, const_grp )
-        axisIn.t  >> axisOut.t
-        axisIn.r  >> axisOut.r
-        axisIn.s  >> axisOut.s
-        axisIn.ro >> axisOut.ro
-        
-        # Constraint
-        consts = []
-        consts.append( pm.pointConstraint(input,axisIn) )
-        consts.append( pm.orientConstraint(input,axisIn) )
-        consts.append( pm.scaleConstraint(input,axisIn) )
-        consts.append( pm.pointConstraint(axisOut,output) )
-        consts.append( pm.scaleConstraint(axisOut,output) )
-        ori = pm.orientConstraint(axisOut,axisOut_Offset, output)
-        consts.append( ori )
-        pm.parent( consts, const_grp )
-        
-        # matchOrient
-        pm.setDrivenKeyframe( ori.axisOut_offsetW1, currentDriver='root.matchOrient', dv=1, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( ori.axisOutW0,        currentDriver='root.matchOrient', dv=1, v=  0, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( ori.axisOutW0,        currentDriver='root.matchOrient', dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( ori.axisOut_offsetW1, currentDriver='root.matchOrient', dv=0, v=  0, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleX,      currentDriver='root.axisX',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleX,      currentDriver='root.axisX',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.rx,    currentDriver='root.axisX',       dv=0, v=  0, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.rx,    currentDriver='root.axisX',       dv=1, v=180, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleY,      currentDriver='root.axisY',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleY,      currentDriver='root.axisY',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.ry,    currentDriver='root.axisY',       dv=0, v=  0, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.ry,    currentDriver='root.axisY',       dv=1, v=180, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleZ,      currentDriver='root.axisZ',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleZ,      currentDriver='root.axisZ',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.rz,    currentDriver='root.axisZ',       dv=0, v=  0, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisOut_Offset.rz,    currentDriver='root.axisZ',       dv=1, v=180, inTangentType='linear', outTangentType='linear' )
-        
-        # input output
-        root.inTranslate   >> input.t
-        root.inRotate      >> input.r
-        root.inScale       >> input.s
-        root.inRotateOrder >> input.ro
-        output.t  >> root.outTranslate
-        output.r  >> root.outRotate
-        output.s  >> root.outScale
-        output.ro >> root.outRotateOrder
-        
-        root.showLocalAxis >> input.displayLocalAxis
-        root.showLocalAxis >> output.displayLocalAxis
-        root.showLocalAxis >> orient.displayLocalAxis
-        #input.displayLocalAxis.set(True)
-        #output.displayLocalAxis.set(True)
-        #orient.displayLocalAxis.set(True)
-        const_grp.hiddenInOutliner.set(True)
-        
-        # dv
-        root.inTranslate.set(5,5,5)
-        
-        # 인스턴스 어트리뷰트 등록
-        self.input  = input
-        self.output = output
-        self.orient = orient
-        self.root   = root
-        
-        for item in root.listAttr( ud=True ):
-            self.__setattr__( item.split('.')[-1], item )
-
-    def setInput(self, transformNode ):
-        inputNode = pm.PyNode(transformNode)
-        inputNode.t  >> self.root.inTranslate
-        inputNode.r  >> self.root.inRotate
-        inputNode.s  >> self.root.inScale
-        inputNode.ro >> self.root.inRotateOrder
-        
-    def setOutput(self, transformNode ):
-        outputNode = pm.PyNode(transformNode)
-        self.root.outTranslate   >> outputNode.t
-        self.root.outRotate      >> outputNode.r
-        self.root.outScale       >> outputNode.s
-        self.root.outRotateOrder >> outputNode.ro
-        
-    def setOrient(self, transformNode):
-        orientNode = pm.PyNode(transformNode)
-        pm.parentConstraint( orientNode, self.orient )
 
 class SymmetryRig(object):
     def __init__(self, *objs, **kwargs):
@@ -231,49 +49,52 @@ class SymmetryRig(object):
         outputNode=None, 
         orientNode=None, 
         axis='x'
-        
+        offset = (0,0,0)
         '''
         # default
         inputNode = None
         outputNode = None
         orientNode = None
-        axis='x'        
+        axis='x'
+        offset=(0,0,0)        
         
         # *objs
         if objs:
             pm.select(objs)
         sel = pm.selected()
 
-        if sel[0]: inputNode  = sel[0]
-        if sel[1]: outputNode = sel[1]
-        if sel[2]: orientNode = sel[2]
-        print "1.", inputNode, outputNode, orientNode, axis
+        if len(sel)>0: inputNode  = sel[0]
+        if len(sel)>1: outputNode = sel[1]
+        if len(sel)>2: orientNode = sel[2]
         
         # **kwargs
-        inputNode  = kwargs.get('inputNode',  inputNode)
-        outputNode = kwargs.get('outputNode', outputNode)
-        orientNode = kwargs.get('orientNode', orientNode)
-        axis       = kwargs.get('axis',       axis)    
-        print "2.", inputNode, outputNode, orientNode, axis
+        self.inputNode  = kwargs.get('inputNode',  inputNode)
+        self.outputNode = kwargs.get('outputNode', outputNode)
+        self.orientNode = kwargs.get('orientNode', orientNode)
+        self.axis       = kwargs.get('axis',       axis)
+        self.offset     = kwargs.get('offset',     offset)
 
+        # Rig 생성
         self.create()
            
-        if sel[0]: self.setInput(inputNode)
-        if sel[1]: self.setOutput(outputNode)
-        if sel[2]: self.setOrient(orientNode)
-        if axis  : self.setAxis(axis)
+        # 입력값 처리
+        if self.inputNode  : self.setInput()
+        if self.outputNode : self.setOutput()
+        if self.orientNode : self.setOrient()
+        if self.axis       : self.setAxis()
+        if self.offset     : self.setOffset()
         
     def create(self):        
         # 노드 생성
-        root           = pm.group(n='root',           em=True)
-        input          = pm.group(n='input',          em=True)  # @ReservedAssignment
-        output         = pm.group(n='output',         em=True)
-        orient         = pm.group(n='orient',         em=True)
-        axisIn         = pm.group(n='axisIn',         em=True)
-        axisCalc       = pm.group(n='axisCalc',       em=True)
-        offset         = pm.group(n='offset', em=True)
-        axisOut        = pm.group(n='axisOut',        em=True)
-        const_grp      = pm.group(n='const_grp',      em=True)
+        root           = pm.group(n='root',      em=True)
+        input          = pm.group(n='input',     em=True)  # @ReservedAssignment
+        output         = pm.group(n='output',    em=True)
+        orient         = pm.group(n='orient',    em=True)
+        axisIn         = pm.group(n='axisIn',    em=True)
+        axisCalc       = pm.group(n='axisCalc',  em=True)
+        offset         = pm.group(n='offset',    em=True)
+        axisOut        = pm.group(n='axisOut',   em=True)
+        const_grp      = pm.group(n='const_grp', em=True)
        
         # 어트리뷰트 추가
         root.addAttr( 'axis', at='double3' )
@@ -283,7 +104,12 @@ class SymmetryRig(object):
         root.addAttr( 'rotateOffset', at='double3' )
         root.addAttr( 'rotateOffsetX', at='double', parent='rotateOffset', keyable=True )
         root.addAttr( 'rotateOffsetY', at='double', parent='rotateOffset', keyable=True )
-        root.addAttr( 'rotateOffsetZ', at='double', parent='rotateOffset', keyable=True )      
+        root.addAttr( 'rotateOffsetZ', at='double', parent='rotateOffset', keyable=True )  
+        
+        root.addAttr( 'constrinatFor_input', at='message' )
+        root.addAttr( 'constrinatFor_output', at='message' )
+        root.addAttr( 'constrinatFor_orient', at='message' )
+            
         root.setAttr( 'tx', keyable=False, lock=True, channelBox=False)
         root.setAttr( 'ty', keyable=False, lock=True, channelBox=False)
         root.setAttr( 'tz', keyable=False, lock=True, channelBox=False)
@@ -319,13 +145,13 @@ class SymmetryRig(object):
         consts.append( ori )
         pm.parent( consts, const_grp )
         
-        # matchOrient
-        pm.setDrivenKeyframe( axisCalc.scaleX,      currentDriver='root.axisX',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleX,      currentDriver='root.axisX',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleY,      currentDriver='root.axisY',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleY,      currentDriver='root.axisY',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleZ,      currentDriver='root.axisZ',       dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
-        pm.setDrivenKeyframe( axisCalc.scaleZ,      currentDriver='root.axisZ',       dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
+        # SDK
+        pm.setDrivenKeyframe( axisCalc.scaleX, currentDriver='root.axisX', dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
+        pm.setDrivenKeyframe( axisCalc.scaleX, currentDriver='root.axisX', dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
+        pm.setDrivenKeyframe( axisCalc.scaleY, currentDriver='root.axisY', dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
+        pm.setDrivenKeyframe( axisCalc.scaleY, currentDriver='root.axisY', dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
+        pm.setDrivenKeyframe( axisCalc.scaleZ, currentDriver='root.axisZ', dv=0, v=  1, inTangentType='linear', outTangentType='linear' )
+        pm.setDrivenKeyframe( axisCalc.scaleZ, currentDriver='root.axisZ', dv=1, v= -1, inTangentType='linear', outTangentType='linear' )
 
         # dv
         input.t.set(5,5,5)
@@ -335,7 +161,6 @@ class SymmetryRig(object):
         self.output = output
         self.orient = orient
         self.root   = root
-        self.offset = offset
         self.__const_grp = const_grp
         
         # Display
@@ -344,32 +169,115 @@ class SymmetryRig(object):
         orient.displayLocalAxis.set(True)
         #const_grp.hiddenInOutliner.set(True)
 
-    def setInput(self, transformNode ):
+    def setInput(self, transformNode=None ):
         ''' input 설정 '''
-        const = pm.parentConstraint( transformNode, self.input )
+        if transformNode:
+            self.inputNode = transformNode
+
+        # 이미 연결된 컨스트레인이 있으면 컨스트레인 삭제
+        const = self.root.constrinatFor_input.get()
+        if const:
+            pm.delete( const )
+ 
+        # 컨스트레인
+        const = pm.parentConstraint( self.inputNode, self.input )
+        const.message >> self.root.constrinatFor_input
+        
+        # 컨스트레인을 const_grp에 페어런트
         pm.parent( const, self.__const_grp )
         
-    def setOutput(self, transformNode ):
+        # rootNode 이름 변경
+        self.__setRename()
+        
+    def setOutput(self, transformNode=None ):
         ''' output 설정 '''
-        const = pm.parentConstraint( self.output, transformNode )
-        pm.parent( const, self.__const_grp )
+        if transformNode:
+            self.outputNode = transformNode
+
+        # 이미 연결된 컨스트레인이 있으면 컨스트레인 삭제
+        const = self.root.constrinatFor_output.get()
+        if const:
+            pm.delete( const )
+
+        # 컨스트레인
+        const = pm.parentConstraint( self.output, self.outputNode )
+        const.message >> self.root.constrinatFor_output
         
-    def setOrient(self, transformNode):
+        # 컨스트레인을 const_grp에 페어런트
+        pm.parent( const, self.__const_grp )
+
+        # rootNode 이름 변경
+        self.__setRename()
+        
+    def setOrient(self, transformNode=None ):
         ''' orient 설정 '''
-        const = pm.parentConstraint( transformNode, self.orient )
-        pm.parent( const, self.__const_grp )
+        # 입력이 있으면 orientNode로 등록
+        if transformNode:
+            self.orientNode = transformNode
         
-    def setAxis(self, axis):
+        # 이미 연결된 컨스트레인이 있으면 컨스트레인 삭제
+        const = self.root.constrinatFor_orient.get()
+        if const:
+            pm.delete( const )
+        
+        # 컨스트레인
+        const = pm.parentConstraint( self.orientNode, self.orient ) 
+        const.message >> self.root.constrinatFor_orient     
+        
+        # 컨스트레인을 const_grp에 페어런트
+        pm.parent( const, self.__const_grp )
+
+        # rootNode 이름 변경
+        self.__setRename()
+        
+    def setAxis(self, axis='' ):
         ''' Axis 설정 '''
-        if   axis == 'x':
+        if axis:
+            self.axis = axis
+            
+        if   self.axis == 'x':
             self.root.axis.set(1,0,0)
             
-        elif axis == 'y':
+        elif self.axis == 'y':
             self.root.axis.set(0,1,0)
             
-        elif axis == 'z':
+        elif self.axis == 'z':
             self.root.axis.set(0,0,1) 
                        
         else:
             raise AttributeError(u"axis입력이 잘못됐습니다.")
+    
+        # rootNode 이름 변경
+        self.__setRename()
+    
+    def setOffset(self, offset=None ):
+        ''' offset 세팅 '''
+        if offset:
+            self.offset = offset
+            
+        self.root.rotateOffset.set( self.offset )
+ 
+    def __setRename(self):
+        ''' root노드 이름 변경 '''
+        newName = 'symmetryRig__TARGET__CONSTRAINT__ORIENT__AXIS__'
+        
+        if self.inputNode : 
+            newName = newName.replace('TARGET',     self.inputNode.name() )
+            
+        if self.outputNode : 
+            newName = newName.replace('CONSTRAINT', self.outputNode.name() )
+            
+        if self.orientNode: 
+            newName = newName.replace('ORIENT',     self.orientNode.name() )
+            
+        if self.axis: 
+            newName = newName.replace('AXIS',       self.axis )
+        
+        # 이름 변경
+        self.root.rename(newName)
+        
+        
+        
+        
+        
         

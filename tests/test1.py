@@ -4,6 +4,7 @@ import sys
 sys.path.append(r'D:\workspace_Git\Raven')
 
 import raven.jointBaseRig as rig
+import raven.transform as tr
 reload(rig)
 
 # 모듈 인스턴스 생성
@@ -61,10 +62,7 @@ rightEye.createLayout()
 #sym = rig.SymmetryRig( leftEye.layout.root,   rightEye.layout.root,   axis='z' )
 #sym = rig.SymmetryRig( leftEye.layout.eye_up, rightEye.layout.eye_up, axis='z' )
 
-reload(rig)
-rig.SymmetryRig( leftEye.layout.root, rightEye.layout.root, "head_jnt",  axis='z' )
-
-rig.SymmetryRig()
+tr.SymmetryRig( leftEye.layout.root, rightEye.layout.root, "head_jnt",  axis='z' )
 
 
 jaw = rig.Jaw()
