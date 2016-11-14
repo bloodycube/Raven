@@ -290,7 +290,7 @@ class Module(object):
             pm.parent( self.layout.root, w=True)
             
             # 페어런트에 스내핑
-            snap( self.layout.parent, parent)
+            snap( parent, self.layout.parent)
             
             # 컨스트레인을 건다음
             consts.append( pm.parentConstraint( parent, self.layout.parent) )
@@ -309,7 +309,6 @@ class Module(object):
         # 레이아웃 삭제 (parent를 한번에 삭제 할경우 찌그러지는 현상 생김)
         pm.delete( self.layout.const_grp )
         pm.delete( self.layout.parent )
-
 
     def open_jntFile(self):
         ''' 조인트 파일 오픈 '''

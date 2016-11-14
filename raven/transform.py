@@ -106,9 +106,12 @@ class SymmetryRig(object):
         root.addAttr( 'rotateOffsetY', at='double', parent='rotateOffset', keyable=True )
         root.addAttr( 'rotateOffsetZ', at='double', parent='rotateOffset', keyable=True )  
         
-        root.addAttr( 'constrinatFor_input', at='message' )
-        root.addAttr( 'constrinatFor_output', at='message' )
-        root.addAttr( 'constrinatFor_orient', at='message' )
+        root.addAttr( 'inputNode',  at='message' )
+        root.addAttr( 'outputNode', at='message' )
+        root.addAttr( 'orientNode', at='message' )
+        root.addAttr( 'constrinatFor_input',  at='message', multi=True, indexMatters=False )
+        root.addAttr( 'constrinatFor_output', at='message', multi=True, indexMatters=False )
+        root.addAttr( 'constrinatFor_orient', at='message', multi=True, indexMatters=False )
             
         root.setAttr( 'tx', keyable=False, lock=True, channelBox=False)
         root.setAttr( 'ty', keyable=False, lock=True, channelBox=False)
@@ -164,10 +167,10 @@ class SymmetryRig(object):
         self.__const_grp = const_grp
         
         # Display
-        input.displayLocalAxis.set(True)
-        output.displayLocalAxis.set(True)
-        orient.displayLocalAxis.set(True)
-        #const_grp.hiddenInOutliner.set(True)
+        #input.displayLocalAxis.set(True)
+        #output.displayLocalAxis.set(True)
+        #orient.displayLocalAxis.set(True)
+        const_grp.hiddenInOutliner.set(True)
 
     def setInput(self, transformNode=None ):
         ''' input 설정 '''
@@ -175,39 +178,78 @@ class SymmetryRig(object):
             self.inputNode = transformNode
 
         # 이미 연결된 컨스트레인이 있으면 컨스트레인 삭제
-        const = self.root.constrinatFor_input.get()
-        if const:
-            pm.delete( const )
+        consts = self.root.constrinatFor_input.get()
+        if consts:
+            pm.delete( consts )
  
         # 컨스트레인
-        const = pm.parentConstraint( self.inputNode, self.input )
-        const.message >> self.root.constrinatFor_input
+        parenConst = pm.parentConstraint( self.inputNode, self.input )
+        parenConst.enableRestPosition.set(0) # inputNode가 삭제 됐을때 input이 restPosition으로 돌아가지 않도록 세팅
+        scaleConst = pm.scaleConstraint( self.inputNode, self.input )
+        scaleConst.enableRestPosition.set(0)
+        consts = [parenConst,scaleConst]
+        
+        # 메세지 노드로 root에 연결
+        self.inputNode.message >> self.root.inputNode
+        for const in consts: 
+            pm.connectAttr( const.message, self.root.constrinatFor_input, nextAvailable=True  )
         
         # 컨스트레인을 const_grp에 페어런트
-        pm.parent( const, self.__const_grp )
+        pm.parent( consts, self.__const_grp )
         
         # rootNode 이름 변경
         self.__setRename()
+        
+        # 노드 선택
+        pm.select(self.inputNode)
         
     def setOutput(self, transformNode=None ):
         ''' output 설정 '''
         if transformNode:
             self.outputNode = transformNode
-
+            
         # 이미 연결된 컨스트레인이 있으면 컨스트레인 삭제
-        const = self.root.constrinatFor_output.get()
-        if const:
-            pm.delete( const )
+        consts = self.root.constrinatFor_output.get()
+        if consts:
+            pm.delete( consts )
 
+        # 잠긴 어트리뷰트 파악
+        lockedAttr = self.outputNode.listAttr( locked=True )
+
+        skipTr = []
+        skipRt = []
+        skipSc = []
+        for attr in ['tx','ty','tz','rx','ry','rz','sx','sy','sz']:
+            if self.outputNode.attr(attr) in lockedAttr:
+                if   attr[0] == 't':
+                    skipTr.append( attr[-1] )
+                elif attr[0] == 'r':
+                    skipRt.append( attr[-1] )
+                elif attr[0] == 's':
+                    skipSc.append( attr[-1] )
+        
         # 컨스트레인
-        const = pm.parentConstraint( self.output, self.outputNode )
-        const.message >> self.root.constrinatFor_output
+        parenConst = pm.parentConstraint( self.output, self.outputNode, skipTranslate=skipTr, skipRotate=skipRt )
+        scaleConst = pm.scaleConstraint(  self.output, self.outputNode, skip=skipSc )
+        consts = [parenConst,scaleConst]
+        
+        # inputNode가 삭제 됐을때 input이 restPosition으로 돌아가지 않도록 세팅
+        for const in consts:
+            const.enableRestPosition.set(0)
+        
+        # 메세지 노드로 root에 연결 (삭제용)
+        self.outputNode.message >> self.root.outputNode
+        for const in consts: 
+            pm.connectAttr( const.message, self.root.constrinatFor_output, nextAvailable=True  )
         
         # 컨스트레인을 const_grp에 페어런트
-        pm.parent( const, self.__const_grp )
+        pm.parent( consts, self.__const_grp )
 
         # rootNode 이름 변경
         self.__setRename()
+        
+        # 노드 선택
+        pm.select(self.outputNode)
         
     def setOrient(self, transformNode=None ):
         ''' orient 설정 '''
@@ -222,13 +264,20 @@ class SymmetryRig(object):
         
         # 컨스트레인
         const = pm.parentConstraint( self.orientNode, self.orient ) 
-        const.message >> self.root.constrinatFor_orient     
+        
+        # inputNode가 삭제 됐을때 input이 restPosition으로 돌아가지 않도록 세팅
+        const.enableRestPosition.set(0)
+        
+        # 메세지 노드로 root에 연결 (삭제용)
+        const.message >> self.root.constrinatFor_orient
         
         # 컨스트레인을 const_grp에 페어런트
-        pm.parent( const, self.__const_grp )
+        pm.parent( const, self.__const_grp ) 
 
         # rootNode 이름 변경
         self.__setRename()
+        
+        pm.select(self.orientNode)
         
     def setAxis(self, axis='' ):
         ''' Axis 설정 '''
@@ -237,12 +286,15 @@ class SymmetryRig(object):
             
         if   self.axis == 'x':
             self.root.axis.set(1,0,0)
+            self.setOffset( 180,0,0 )
             
         elif self.axis == 'y':
             self.root.axis.set(0,1,0)
+            self.setOffset( 0,180,0 )
             
         elif self.axis == 'z':
-            self.root.axis.set(0,0,1) 
+            self.root.axis.set(0,0,1)
+            self.setOffset( 0,0,180 )
                        
         else:
             raise AttributeError(u"axis입력이 잘못됐습니다.")
@@ -250,25 +302,27 @@ class SymmetryRig(object):
         # rootNode 이름 변경
         self.__setRename()
     
-    def setOffset(self, offset=None ):
+    def setOffset(self, *offset ):
         ''' offset 세팅 '''
         if offset:
+            if not len(offset)==3:
+                raise AttributeError (u'입력이 잘못되었습니다. .setOffset( 180,0,0 ) 형식으로 입력 하세요.')
             self.offset = offset
             
         self.root.rotateOffset.set( self.offset )
  
     def __setRename(self):
         ''' root노드 이름 변경 '''
-        newName = 'symmetryRig__TARGET__CONSTRAINT__ORIENT__AXIS__'
+        newName = 'symmetryRig__TARGET__CONSTRAINT__ORIENT__AXIS'
         
         if self.inputNode : 
-            newName = newName.replace('TARGET',     self.inputNode.name() )
+            newName = newName.replace('TARGET',     self.inputNode.name().replace('_','') )
             
         if self.outputNode : 
-            newName = newName.replace('CONSTRAINT', self.outputNode.name() )
+            newName = newName.replace('CONSTRAINT', self.outputNode.name().replace('_','') )
             
         if self.orientNode: 
-            newName = newName.replace('ORIENT',     self.orientNode.name() )
+            newName = newName.replace('ORIENT',     self.orientNode.name().replace('_','') )
             
         if self.axis: 
             newName = newName.replace('AXIS',       self.axis )

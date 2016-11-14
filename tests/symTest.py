@@ -4,13 +4,24 @@ Created on 2016. 11. 11.
 @author: kyuho_choi
 '''
 import sys
+
+# window
 sys.path.append(r'D:\workspace_Git\Raven')
+
+# osx
+#sys.path.append('/Users/kyuho_choi/git/Raven')
+
 import pymel.core as pm
 import raven.transform as tr
 
+#===============================================================================
+# 
+# sample 1
+# 
+#===============================================================================
 reload(tr)
 
-# sample 1
+# 테스트 환경 세팅
 jnt1 = pm.joint( p=(0,0,-3) )
 jnt2 = pm.joint( p=(0,3,0) )
 jnt3 = pm.joint( p=(0,10,0) )
@@ -24,6 +35,7 @@ pm.joint( jnt4, e=True, zso=True, oj="xyz", sao='yup')
 pm.joint( jnt6, e=True, zso=True, oj="xyz", sao='yup')
 pm.parent(jnt4, jnt6, jnt2)
 
+# 테스트
 pm.select(jnt4,jnt6,jnt2)
 a = tr.SymmetryRig( axis='z', offset=(0,0,180) )
 pm.select(jnt4)
@@ -61,4 +73,18 @@ sym.setOutput(sphere)
 # orient 노드 변경
 loc5 = pm.spaceLocator()
 sym.setInput(loc5)
-pm.select(loc1)
+pm.select(loc5)
+
+# 축 변경
+sym.setAxis('y')
+sym.setOffset( 180,180,0 )
+
+#===============================================================================
+# 
+# sample 3
+# 
+#===============================================================================
+
+
+
+
