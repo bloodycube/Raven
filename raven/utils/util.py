@@ -11,185 +11,6 @@ import pymel.core.datatypes as dt
 #import pymel.core.datatypes as 
 
 #def zeroGroup(objs=[], prefix='', suffix='_zro', translate=True, rotate=True, scale=False, lockAttrZro=True):
-def zeroGroup( *objs, **kwargs):    
-    '''
-    objs = transform nodes name
-    prefix = prefix
-    suffix = suffix
-    translate = translate zero
-    rotate = rotate zero
-    scale = scale zero
-    '''
-    
-    # objs inputs
-    if objs:
-        pm.select(objs)
-    objs = pm.ls(sl=True, flatten=True)
-    if not objs:
-        return
-    
-    # kwargs inputs
-    prefix      = kwargs.get('prefix', '') 
-    suffix      = kwargs.get('suffix', '_zro') 
-    translate   = kwargs.get('translate',True)
-    rotate      = kwargs.get('rotate',True)
-    scale       = kwargs.get('scale',True)
-    lockAttrZro = kwargs.get('lockZroAttr',True) 
-
-    zeroGrps = []
-    for obj in objs:
-        obj = pm.PyNode(obj)
-
-        grp = pm.group(n=prefix + obj + suffix, em=True)
-
-        if translate:
-            pm.delete(pm.pointConstraint(obj, grp))
-        if rotate:
-            pm.delete(pm.orientConstraint(obj, grp))
-        if scale:
-            pm.delete(pm.scaleConstraint(obj, grp))
-
-        parent = obj.getParent()
-        if parent:
-            grp.setParent(parent)
-
-        if lockAttrZro:
-            grp.t.lock()
-            grp.r.lock()
-            grp.s.lock()
-            grp.v.lock()
-
-        obj.setParent(grp)
-        zeroGrps.append(grp)
-
-    return zeroGrps
-
-
-def rigSymTranslate(sourceObj, targetObj):
-    ''' 
-    yz 평면 기준으로 뒤집음
-    아래코드의 리깅 버전.
-    디폴트는 YZ플랜을 기준.
-
-    sel = pm.selected()    
-
-    tx = sourceObj.tx.get()
-    ty = sourceObj.ty.get()    
-    rz = sourceObj.rz.get()
-
-    targetObj.tx.set(-tx)
-    targetObj.ty.set(ty)
-    targetObj.tz.set(0)
-    targetObj.rx.set(0)
-    targetObj.ry.set(180)
-    targetObj.rz.set(-rz) 
-    '''
-    # TODO: 매트릭스노드로 변경.
-
-    # 컨트롤 노드
-    symTr_grp = pm.group(n='symTranslate__%s_TO_%s' %
-                         (sourceObj.name(), targetObj.name()), em=True)
-
-    # 어트리뷰트 설정
-    symTr_grp.addAttr('input_t', at='double3')
-    symTr_grp.addAttr('input_tx', p='input_t', keyable=True)
-    symTr_grp.addAttr('input_ty', p='input_t', keyable=True)
-    symTr_grp.addAttr('input_tz', p='input_t', keyable=True)
-    symTr_grp.addAttr('input_r', at='double3')
-    symTr_grp.addAttr('input_rx', p='input_r', keyable=True)
-    symTr_grp.addAttr('input_ry', p='input_r', keyable=True)
-    symTr_grp.addAttr('input_rz', p='input_r', keyable=True)
-    symTr_grp.addAttr('input_s', at='double3')
-    symTr_grp.addAttr('input_sx', p='input_s', keyable=True)
-    symTr_grp.addAttr('input_sy', p='input_s', keyable=True)
-    symTr_grp.addAttr('input_sz', p='input_s', keyable=True)
-
-    symTr_grp.addAttr('mult_t', at='double3')
-    symTr_grp.addAttr('mult_tx', p='mult_t', keyable=True)
-    symTr_grp.addAttr('mult_ty', p='mult_t', keyable=True)
-    symTr_grp.addAttr('mult_tz', p='mult_t', keyable=True)
-    symTr_grp.addAttr('mult_r', at='double3')
-    symTr_grp.addAttr('mult_rx', p='mult_r', keyable=True)
-    symTr_grp.addAttr('mult_ry', p='mult_r', keyable=True)
-    symTr_grp.addAttr('mult_rz', p='mult_r', keyable=True)
-    symTr_grp.addAttr('mult_s', at='double3')
-    symTr_grp.addAttr('mult_sx', p='mult_s', keyable=True)
-    symTr_grp.addAttr('mult_sy', p='mult_s', keyable=True)
-    symTr_grp.addAttr('mult_sz', p='mult_s', keyable=True)
-
-    symTr_grp.addAttr('offset_t', at='double3')
-    symTr_grp.addAttr('offset_tx', p='offset_t', keyable=True)
-    symTr_grp.addAttr('offset_ty', p='offset_t', keyable=True)
-    symTr_grp.addAttr('offset_tz', p='offset_t', keyable=True)
-    symTr_grp.addAttr('offset_r', at='double3')
-    symTr_grp.addAttr('offset_rx', p='offset_r', keyable=True)
-    symTr_grp.addAttr('offset_ry', p='offset_r', keyable=True)
-    symTr_grp.addAttr('offset_rz', p='offset_r', keyable=True)
-    symTr_grp.addAttr('offset_s', at='double3')
-    symTr_grp.addAttr('offset_sx', p='offset_s', keyable=True)
-    symTr_grp.addAttr('offset_sy', p='offset_s', keyable=True)
-    symTr_grp.addAttr('offset_sz', p='offset_s', keyable=True)
-
-    symTr_grp.addAttr('output_t', at='double3')
-    symTr_grp.addAttr('output_tx', p='output_t', keyable=True)
-    symTr_grp.addAttr('output_ty', p='output_t', keyable=True)
-    symTr_grp.addAttr('output_tz', p='output_t', keyable=True)
-    symTr_grp.addAttr('output_r', at='double3')
-    symTr_grp.addAttr('output_rx', p='output_r', keyable=True)
-    symTr_grp.addAttr('output_ry', p='output_r', keyable=True)
-    symTr_grp.addAttr('output_rz', p='output_r', keyable=True)
-    symTr_grp.addAttr('output_s', at='double3')
-    symTr_grp.addAttr('output_sx', p='output_s', keyable=True)
-    symTr_grp.addAttr('output_sy', p='output_s', keyable=True)
-    symTr_grp.addAttr('output_sz', p='output_s', keyable=True)
-
-    # Transform조작
-    symTr_grp.mult_t.set(-1, 1, 1)
-    symTr_grp.mult_r.set(-1, -1, -1)
-    symTr_grp.mult_s.set(1, 1, 1)
-    symTr_grp.offset_t.set(0, 0, 0)
-    symTr_grp.offset_r.set(0, 180, 0)
-    symTr_grp.offset_s.set(0, 0, 0)
-
-    # 곱셈노드, 덧셈 노드 생성
-    md_t = pm.createNode('multiplyDivide')
-    md_r = pm.createNode('multiplyDivide')
-    md_s = pm.createNode('multiplyDivide')
-    pma_t = pm.createNode('plusMinusAverage')
-    pma_r = pm.createNode('plusMinusAverage')
-    pma_s = pm.createNode('plusMinusAverage')
-
-    # 계산노드들에 값 입력
-    symTr_grp.input_t >> md_t.input1
-    symTr_grp.input_r >> md_r.input1
-    symTr_grp.input_s >> md_s.input1
-    symTr_grp.mult_t >> md_t.input2
-    symTr_grp.mult_r >> md_r.input2
-    symTr_grp.mult_s >> md_s.input2
-    symTr_grp.offset_t >> pma_t.input3D[1]
-    symTr_grp.offset_r >> pma_r.input3D[1]
-    symTr_grp.offset_s >> pma_s.input3D[1]
-
-    # 입력된 값을 처리 하는 리깅: 곱셈을 먼저 처리, 나중에 덧셈.
-    md_t.output >> pma_t.input3D[0]
-    md_r.output >> pma_r.input3D[0]
-    md_s.output >> pma_s.input3D[0]
-
-    # 출력
-    pma_t.output3D >> symTr_grp.output_t
-    pma_r.output3D >> symTr_grp.output_r
-    pma_s.output3D >> symTr_grp.output_s
-
-    # 입력, 출력에 선택한 노드 꼽음.
-    sourceObj.t >> symTr_grp.input_t
-    symTr_grp.output_t >> targetObj.t
-    sourceObj.r >> symTr_grp.input_r
-    symTr_grp.output_r >> targetObj.r
-    sourceObj.s >> symTr_grp.input_s
-    symTr_grp.output_s >> targetObj.s
-
-    pm.select(sourceObj)
-    return symTr_grp
 
 
 def rigCurveConnect(*objs, **kwargs):
@@ -269,7 +90,7 @@ def rigCurveConnect(*objs, **kwargs):
     return loc
 
 
-def vector_strToVec( inputVal ):
+def strToVec( inputVal ):
     '''
     Abstract
     ========
@@ -363,9 +184,9 @@ def snap( *args, **kwargs ):
         return
 
     elif type=='aim':
-        kwargs['aimVector']     = vector_strToVec( kwargs.pop('aim') if 'aim' in kwargs.keys() else kwargs.get('aimVector',    'x') )
-        kwargs['upVector']      = vector_strToVec( kwargs.pop('u')   if 'u'   in kwargs.keys() else kwargs.get('upVector',     'y') )
-        kwargs['worldUpVector'] = vector_strToVec( kwargs.pop('wu')  if 'wu'  in kwargs.keys() else kwargs.get('worldUpVector','y') )
+        kwargs['aimVector']     = strToVec( kwargs.pop('aim') if 'aim' in kwargs.keys() else kwargs.get('aimVector',    'x') )
+        kwargs['upVector']      = strToVec( kwargs.pop('u')   if 'u'   in kwargs.keys() else kwargs.get('upVector',     'y') )
+        kwargs['worldUpVector'] = strToVec( kwargs.pop('wu')  if 'wu'  in kwargs.keys() else kwargs.get('worldUpVector','y') )
 
         if len(args)>2:
             #세개 이상선택 됐을때 세번째 선택된 오브젝트를 up오브젝트로 사용하도록 설정
@@ -468,7 +289,7 @@ def resetMesh(mesh=None):
     pm.select(newMesh)
 
 
-def strToVec( inputVal ):
+def vector_strToVec( inputVal ):
     '''
     update : 2015-04-27
     '''

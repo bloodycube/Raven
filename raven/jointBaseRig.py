@@ -143,7 +143,18 @@ class Module(object):
         else:
             side = '_'
         return side
-    
+
+    def layoutRig_grp(self):
+        ''' 노드가 모이는 그룹 세팅 '''
+        node = 'layoutRig_grp'
+        
+        if pm.objExists(node):
+            node = pm.PyNode( node )
+        else:
+            node = pm.group( n=node, em=True )
+            
+        return node
+
     def createJoint(self):
         ''' 조인트 생성 '''
         
@@ -181,6 +192,9 @@ class Module(object):
         
         # 임포트한 노드들 등록
         self.registLayout()
+        
+        # 페어런팅
+        pm.parent( self.layout.parent, self.layoutRig_grp() )
         
         # 조인트가 존재하면 레이아웃을 조인트에 붙임.
         if self.isJntExists():

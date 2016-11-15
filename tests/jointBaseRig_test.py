@@ -4,7 +4,8 @@ import sys
 sys.path.append(r'D:\workspace_Git\Raven')
 
 import raven.jointBaseRig as rig
-import raven.transform as tr
+import raven.rigLib.transform as tr
+reload(rig)
 reload(tr)
 
 # 모듈 인스턴스 생성

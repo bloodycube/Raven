@@ -12,7 +12,7 @@ sys.path.append(r'D:\workspace_Git\Raven')
 #sys.path.append('/Users/kyuho_choi/git/Raven')
 
 import pymel.core as pm
-import raven.transform as tr
+import raven.rigLib.transform as tr
 
 #===============================================================================
 # 
@@ -85,6 +85,6 @@ sym.setOffset( 180,180,0 )
 # 
 #===============================================================================
 
-
-
+tr.snap()
+pm.scale( 0.5, 0.5, 0.5, r=True )
 

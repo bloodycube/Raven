@@ -6,11 +6,56 @@ Created on 2016. 11. 11.
 '''
 
 import pymel.core as pm
+import pymel.core.datatypes as dt
 
-def snap(*obj, **kwargs):
+def strToVec( inputVal ):
+    '''
+    Abstract
+    ========
+        1. 문자를 벡터형으로 리턴
+
+        2. 예제 :
+            >> getVectorByChar( 'x' )
+            dt.Vector([1.0, 0.0, 0.0])
+
+            >> getVectorByChar( 'y' )
+            dt.Vector([1.0, 1.0, 0.0])
+
+    @param inputVal: 'x','y','z','-x','-y','-z', or vector
+    @type inputVal: str | tuple | pm.dt.Vector
+
+    @return : 입력된 캐릭터에 대응하는 벡터
+    @rtype : pm.dt.Vector
+
+    @version No 0.7
+    '''
+
+    # 입력된 값이 문자열일경우
+    if isinstance( inputVal, str ) or isinstance( inputVal, unicode ):
+
+        # 입력된 값을 앞뒤 빈칸을 없애고, 소문자로 변경
+        inputVal = inputVal.strip().lower()
+
+        # 아래 리스트에 없는 값이 들어오면 에러
+        if not inputVal in ['x','y','z','-x','-y','-z']:
+            raise
+
+        # 매칭
+        if   inputVal.lower()== 'x': return dt.Vector( 1, 0, 0)
+        elif inputVal.lower()=='-x': return dt.Vector(-1, 0, 0)
+        elif inputVal.lower()== 'y': return dt.Vector( 0, 1, 0)
+        elif inputVal.lower()=='-y': return dt.Vector( 0,-1, 0)
+        elif inputVal.lower()== 'z': return dt.Vector( 0, 0, 1)
+        elif inputVal.lower()=='-z': return dt.Vector( 0, 0,-1)
+
+    else:
+        return dt.Vector( inputVal )
+    
+
+def snap( *objs, **kwargs):
     # 가변인수 처
-    if obj:
-        pm.select(obj)
+    if objs:
+        pm.select(objs)
     sel = pm.selected()
     if len(sel)<1:
         raise AttributeError(u"두개 이상의 오브젝트를 선택해주세요.")
@@ -19,11 +64,11 @@ def snap(*obj, **kwargs):
     constType = kwargs.get('constType','parent')
     
     # PyNode 리캐스팅
-    obj = sel.pop(-1)
+    const = sel.pop(-1)
     target = sel
     
     # 롹 걸린 어트리뷰트 파악
-    lockedAttrs = obj.listAttr( locked=True )
+    lockedAttrs = const.listAttr( locked=True )
     
     # 롹을 잠깐 풀고
     for attr in lockedAttrs:
@@ -31,13 +76,67 @@ def snap(*obj, **kwargs):
         
     # 위치 맞춘다음
     if constType=='parent':
-        pm.delete( pm.parentConstraint( target, obj) )
+        pm.delete( pm.parentConstraint( target, const) )
     elif constType=='point':
-        pm.delete( pm.pointConstraint( target, obj) )
+        pm.delete( pm.pointConstraint( target, const) )
     
     # 다시 롹
     for attr in lockedAttrs:
         attr.lock()
+
+
+def zeroGroup( *objs, **kwargs):
+    '''
+    objs = transform nodes name
+    prefix = prefix
+    suffix = suffix
+    translate = translate zero
+    rotate = rotate zero
+    scale = scale zero
+    '''
+    
+    # objs inputs
+    if objs:
+        pm.select(objs)
+    objs = pm.ls(sl=True, flatten=True)
+    if not objs:
+        return
+    
+    # kwargs inputs
+    prefix      = kwargs.get('prefix', '') 
+    suffix      = kwargs.get('suffix', '_zro') 
+    translate   = kwargs.get('translate',True)
+    rotate      = kwargs.get('rotate',True)
+    scale       = kwargs.get('scale',True)
+    lockAttrZro = kwargs.get('lockZroAttr',False) 
+
+    zeroGrps = []
+    for obj in objs:
+        obj = pm.PyNode(obj)
+
+        grp = pm.group(n=prefix + obj + suffix, em=True)
+
+        if translate:
+            pm.delete(pm.pointConstraint(obj, grp))
+        if rotate:
+            pm.delete(pm.orientConstraint(obj, grp))
+        if scale:
+            pm.delete(pm.scaleConstraint(obj, grp))
+
+        parent = obj.getParent()
+        if parent:
+            grp.setParent(parent)
+
+        if lockAttrZro:
+            grp.t.lock()
+            grp.r.lock()
+            grp.s.lock()
+            grp.v.lock()
+
+        obj.setParent(grp)
+        zeroGrps.append(grp)
+
+    return zeroGrps
 
 
 class SymmetryRig(object):
@@ -84,7 +183,9 @@ class SymmetryRig(object):
         if self.axis       : self.setAxis()
         if self.offset     : self.setOffset()
         
-    def create(self):        
+    def create(self):
+        # 그룹 생성
+            
         # 노드 생성
         root           = pm.group(n='root',      em=True)
         input          = pm.group(n='input',     em=True)  # @ReservedAssignment
@@ -136,6 +237,9 @@ class SymmetryRig(object):
         axisIn.ro >> axisOut.ro        
         root.rotateOffset >> offset.r
         
+        # 리그 그룹 존재 유무 확인
+        pm.parent( root, self.symmetryRig_grp() )
+        
         # Constraint
         consts = []
         consts.append( pm.pointConstraint(input,axisIn) )
@@ -171,6 +275,17 @@ class SymmetryRig(object):
         #output.displayLocalAxis.set(True)
         #orient.displayLocalAxis.set(True)
         const_grp.hiddenInOutliner.set(True)
+
+    def symmetryRig_grp(self):
+        ''' 노드가 모이는 그룹 세팅 '''
+        node = 'symmetryRig_grp'
+        
+        if pm.objExists(node):
+            node = pm.PyNode( node )
+        else:
+            node = pm.group( n=node, em=True )
+            
+        return node
 
     def setInput(self, transformNode=None ):
         ''' input 설정 '''
@@ -329,9 +444,3 @@ class SymmetryRig(object):
         
         # 이름 변경
         self.root.rename(newName)
-        
-        
-        
-        
-        
-        
