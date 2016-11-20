@@ -139,6 +139,54 @@ def zeroGroup( *objs, **kwargs):
     return zeroGrps
 
 
+def getCenter( nodes, getPivot=True, getScalePivot=False ):
+    '''
+    선택된 컴포턴트나 트렌스폼노드들의 중심좌표를 리턴
+
+    @param nodes: trnasform, or components 노드들
+    @type nodes: list
+
+    @param getPivot: (default True),  transform노드의 pivot을 기준으로 작동, 기본값을 True translate를 사용
+    @type getPivot: bool
+
+    @param getScalePivot: (default False), getPivot이 True일때 기본으로 rotatePivot을 사용하는데 scalePivot을 사용하고 싶을때 사용.
+    @type getScalePivot: bool
+
+    @return : 중심 좌표
+    @rtype : pm.dt.Vector
+    '''
+    result = []
+    if getPivot:
+        for obj in nodes:
+            if pm.nodeType(obj) == 'transform':
+                xformResult = pm.xform( obj, q=True, ws=True, pivots=True)
+                rtPiv, scPiv = xformResult[:3], xformResult[3:]
+
+                if getScalePivot: res = scPiv
+                else:             res = rtPiv
+
+            else:
+                res = pm.xform( obj, q=True, ws=True, t=True)
+
+            result.extend( res )
+    else:
+        result = pm.xform( nodes, q=True, ws=True, t=True)
+
+    # 입력된 자료의 평균값 알아냄
+    points = []
+    for i in range( len(result)/3 ):
+        pnt = i*3
+        x,y,z = result[pnt], result[pnt+1], result[pnt+2]
+        points.append( dt.Vector(x,y,z) )
+
+    arr = dt.Array(points)
+    sum = dt.Vector( arr.sum(0) )  # @ReservedAssignment
+    avr = sum / len(points)
+
+    # 결과 리턴
+    return avr
+
+
 class SymmetryRig(object):
     def __init__(self, *objs, **kwargs):
         '''
@@ -444,3 +492,5 @@ class SymmetryRig(object):
         
         # 이름 변경
         self.root.rename(newName)
+
+

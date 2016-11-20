@@ -506,6 +506,7 @@ def getRebuildTargetFromShapeEditor():
         
     return resultMesh
 
+
 def isSelectMeshEnabled():
     '''
       Description:
@@ -515,6 +516,7 @@ def isSelectMeshEnabled():
           Return 1 if enabled; otherwise return 0;
     '''
     return pm.mel.isSelectMeshEnabled()  # @UndefinedVariable
+
 
 def splitBlendShape(nutralGeo, partitionGeo, targetGeo, split=['L','R']):
     '''

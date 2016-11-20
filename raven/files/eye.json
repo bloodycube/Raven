@@ -1,8 +1,10 @@
 {
     "jointFile"     : "eye_joint.ma",    
-    "layoutFile"    : "eye_template.ma",    
+    "layoutFile"    : "eye_template.ma",
+    "rigFile"       : "eye_rig.ma",  
     "jointNodeList" : ["eye__SIDE__jnt","eyeBall__SIDE__jnt","iris__SIDE__jnt","upperLid__SIDE__jnt","upperLidEnd__SIDE__jnt","lowerLid__SIDE__jnt","lowerLidEnd__SIDE__jnt"],
     "layoutNodeList": [ "iris_pos_zro", "lowerLid_jo", "lowerLid_pos_zro", "constMe_to_parentJoint", "upperLid_jo", "eye_up_zro", "lowerLid_aim_zro", "result_upperLid", "eyeBall_jo", "upperLid_aim", "hdl_grp", "eye_aim", "rig_grp", "upperLid_aim_zro", "root", "result_eyeBall", "const_grp", "iris_pos", "eye_up", "calc_jointOrient_grp", "upperLid_pos_zro", "result_grp", "constMe_to_parent", "parent", "result_lowerLid", "result_lowerLidEnd", "lowerLid_aim", "eye_rot", "result_iris", "result_upperLidEnd", "upperLid_pos", "eye_pos", "upperLid_rot", "lowerLid_pos", "lowerLid_rot", "eye_aim_zro", "eye_jo", "result_eye" ],
+    "rigNodeList"   : ["module_grp","module_meta"],
     "rootJnt"       : ["eye__SIDE__jnt"],
    
     "snap_layToJnt":[
@@ -12,8 +14,7 @@
 	    	{"hdl":"upperLid_aim_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},	    	
 	    	{"hdl":"upperLid_pos_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},
 	    	{"hdl":"lowerLid_aim_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},
-	    	{"hdl":"lowerLid_pos_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},
-	    	
+	    	{"hdl":"lowerLid_pos_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},	    	
 	    	{"hdl":"eye_aim", 	    "jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":[2,0,0]},
 	    	{"hdl":"upperLid_aim", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]},
 	    	{"hdl":"lowerLid_aim", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]}
@@ -27,5 +28,30 @@
         	{"outputNode":"result_upperLidEnd",	"target":"upperLidEnd__SIDE__jnt"},
         	{"outputNode":"result_lowerLid", 	"target":"lowerLid__SIDE__jnt"	 },
         	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd__SIDE__jnt"}
-    	]
+    	],
+    	
+    "jntToRig" : { 
+    		"eye"         : "eye_input",
+    		"eyeBall"     : "eyeBall_input",
+    		"iris"        : "iris_input",
+    		"upperLid"    : "upperLid_input",
+    		"upperLidEnd" : "upperLidEnd_input",
+    		"lowerLid"    : "lowerLid_input",
+    		"lowerLidEnd" : "lowerLidEnd_input"
+    		},
+    		
+    "rig":{
+    	"file":"eye_rig.ma",
+	    "setInput" : { 
+	    		"eye"         : "eye_input",
+	    		"eyeBall"     : "eyeBall_input",
+	    		"iris"        : "iris_input",
+	    		"upperLid"    : "upperLid_input",
+	    		"upperLidEnd" : "upperLidEnd_input",
+	    		"lowerLid"    : "lowerLid_input",
+	    		"lowerLidEnd" : "lowerLidEnd_input"
+	    		},
+	    "setOutput" : {}
+    	}
+    
 }

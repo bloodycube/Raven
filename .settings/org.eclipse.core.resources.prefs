@@ -1,9 +1,15 @@
 eclipse.preferences.version=1
 encoding//raven/jointBaseRig.py=utf-8
+encoding//raven/jointBaseRig2.py=utf-8
+encoding//raven/rigLib/FACS.py=utf-8
+encoding//raven/rigLib/attribute.py=utf-8
+encoding//raven/rigLib/general.py=utf-8
+encoding//raven/rigLib/joint.py=utf-8
+encoding//raven/rigLib/mesh.py=utf-8
+encoding//raven/rigLib/rigCurveConnect.py=utf-8
+encoding//raven/rigLib/splitBlendShape.py=utf-8
 encoding//raven/rigLib/transform.py=utf-8
-encoding//raven/utils/FACS.py=utf-8
 encoding//raven/utils/__init__.py=utf-8
-encoding//raven/utils/splitBlendShape.py=utf-8
 encoding//raven/utils/util.py=utf-8
 encoding//tests/blendShapeCtrlUI.py=utf-8
 encoding//tests/facialRig.py=utf-8

@@ -51,7 +51,7 @@ class Struct(object):
                 result.append( item )
         return result
     
-
+  
 class Module(object):
     _jsonFile = None
     _prefix = None
@@ -134,7 +134,15 @@ class Module(object):
             target     = item['target'].replace('__SIDE__',self.__getSideChar() )
             
             self.const_jntToLay.append( {"outputNode":outputNode, "target":target} )
-       
+            
+        # ---------------------------
+        #
+        # 리깅관련
+        #
+        # ---------------------------
+        self.rigFile = self.__filePath + data['rigFile']
+        self.rigNodeList = data['rigNodeList']
+        
     def __getSideChar(self):
         ''' side 캐릭터 처리 '''
         side = self.__side
@@ -200,7 +208,18 @@ class Module(object):
         if self.isJntExists():
             self.__snap_layTojnt()
             self.__const_jntToLay()
-    
+
+    def createRig(self):
+        # 이미 리그가 존재하는지 확인
+        if self.isRigExists():
+            raise AttributeError (u"조인트가 이미 존재합니다.")
+         
+        # 존재하지 않으면 파일 임포트, PyNode로 리턴됨
+        #nodes = pm.importFile( self.rigFile, returnNewNodes = True )
+        #pm.importFile( self.rigFile, returnNewNodes = True, renameAll = True, renamingPrefix = "eyeL" )
+        pm.importFile( self.rigFile, returnNewNodes = True )
+ 
+
     def registJoint(self):
         ''' self.joint에 joint 노드 등록 '''
         if not self.isJntExists():
@@ -233,6 +252,15 @@ class Module(object):
         ''' 레이아웃 존재 유무 체크 '''
         condition = True
         for nodeName in self.layoutNodeList:
+   
+            if not pm.objExists(nodeName):
+                condition = False
+        return condition
+    
+    def isRigExists(self):
+        ''' 레이아웃 존재 유무 체크 '''
+        condition = True
+        for nodeName in self.rigNodeList:
    
             if not pm.objExists(nodeName):
                 condition = False
@@ -314,6 +342,9 @@ class Module(object):
             
             # 생성된 컨스트레인 레이아웃에 포함시킴
             pm.parent(consts, self.layout.const_grp)
+
+    def __jntToRig(self):
+        pass
 
     def deleteLayout(self):
         # 레이아웃이 존재하지 않으면 에러, 중지.

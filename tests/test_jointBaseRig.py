@@ -79,3 +79,21 @@ jaw.createJoint()
 # 턱 조인트 리그 생
 jaw.createLayout()
 
+
+########################
+reload(rig)
+reload(tr)
+
+# 눈 인스턴스 생성
+leftEye = rig.Eye('L')
+
+# 눈 조인트 생성
+leftEye.createJoint()
+
+# 레이아웃 생성
+leftEye.createLayout()
+
+# 조인트 레이아웃 생성
+leftEye.createRig()
+
+print len(pm.ls())
