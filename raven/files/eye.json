@@ -2,34 +2,11 @@
     "jointFile"     : "eye_joint.ma",    
     "layoutFile"    : "eye_template.ma",
     "rigFile"       : "eye_rig.ma",  
-    "jointNodeList" : ["eye__SIDE__jnt","eyeBall__SIDE__jnt","iris__SIDE__jnt","upperLid__SIDE__jnt","upperLidEnd__SIDE__jnt","lowerLid__SIDE__jnt","lowerLidEnd__SIDE__jnt"],
+    "jointNodeList" : ["eye_jnt","eyeBall_jnt","iris_jnt","upperLid_jnt","upperLidEnd_jnt","lowerLid_jnt","lowerLidEnd_jnt"],
     "layoutNodeList": [ "iris_pos_zro", "lowerLid_jo", "lowerLid_pos_zro", "constMe_to_parentJoint", "upperLid_jo", "eye_up_zro", "lowerLid_aim_zro", "result_upperLid", "eyeBall_jo", "upperLid_aim", "hdl_grp", "eye_aim", "rig_grp", "upperLid_aim_zro", "root", "result_eyeBall", "const_grp", "iris_pos", "eye_up", "calc_jointOrient_grp", "upperLid_pos_zro", "result_grp", "constMe_to_parent", "parent", "result_lowerLid", "result_lowerLidEnd", "lowerLid_aim", "eye_rot", "result_iris", "result_upperLidEnd", "upperLid_pos", "eye_pos", "upperLid_rot", "lowerLid_pos", "lowerLid_rot", "eye_aim_zro", "eye_jo", "result_eye" ],
     "rigNodeList"   : ["module_grp","module_meta"],
-    "rootJnt"       : ["eye__SIDE__jnt"],
+    "rootJnt"       : ["eye_jnt"],
    
-    "snap_layToJnt":[
-	    	{"hdl":"root", 				"jnt":"eye__SIDE__jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"eye_aim_zro", 		"jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"iris_pos_zro", 		"jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":null},
-	    	{"hdl":"upperLid_aim_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},	    	
-	    	{"hdl":"upperLid_pos_zro", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":null},
-	    	{"hdl":"lowerLid_aim_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},
-	    	{"hdl":"lowerLid_pos_zro", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":null},	    	
-	    	{"hdl":"eye_aim", 	    "jnt":"iris__SIDE__jnt", 		"type":"parent", "offset":[2,0,0]},
-	    	{"hdl":"upperLid_aim", 	"jnt":"upperLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]},
-	    	{"hdl":"lowerLid_aim", 	"jnt":"lowerLidEnd__SIDE__jnt", "type":"parent", "offset":[1,0,0]}
-    	],
-    
-    "const_JntToLay":[
-            {"outputNode":"result_eye",			"target":"eye__SIDE__jnt"		 },
-        	{"outputNode":"result_eyeBall",		"target":"eyeBall__SIDE__jnt"	 },
-        	{"outputNode":"result_iris", 		"target":"iris__SIDE__jnt"		 },
-        	{"outputNode":"result_upperLid",	"target":"upperLid__SIDE__jnt"	 },
-        	{"outputNode":"result_upperLidEnd",	"target":"upperLidEnd__SIDE__jnt"},
-        	{"outputNode":"result_lowerLid", 	"target":"lowerLid__SIDE__jnt"	 },
-        	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd__SIDE__jnt"}
-    	],
-    	
     "jntToRig" : { 
     		"eye"         : "eye_input",
     		"eyeBall"     : "eyeBall_input",
@@ -39,19 +16,45 @@
     		"lowerLid"    : "lowerLid_input",
     		"lowerLidEnd" : "lowerLidEnd_input"
     		},
-    		
+
+	"joint":{
+		"file":"eye_joint.ma",
+		"node":["root_jnt", "eyeBall_jnt", "iris_jnt", "upperLid_jnt", "upperLidEnd_jnt", "lowerLid_jnt", "lowerLidEnd_jnt"]
+		},
+	
+	"layout":{
+		"file":"eye_template.ma",
+		"node":["parent", "root", "hdl_grp", "eye_up_zro", "eye_up", "eye_aim_zro", "eye_aim", "eye_pos", "eye_rot", "upperLid_rot", "upperLid_pos_zro", "upperLid_pos", "lowerLid_rot", "lowerLid_pos_zro", "lowerLid_pos", "iris_pos_zro", "iris_pos", "upperLid_aim_zro", "upperLid_aim", "lowerLid_aim_zro", "lowerLid_aim", "rig_grp", "calc_jointOrient_grp", "constMe_to_parent", "eye_jo", "eyeBall_jo", "upperLid_jo", "lowerLid_jo", "const_grp", "eye_rot_locator1", "iris_pos_locator1", "upperLid_rot_locator1", "lowerLid_rot_locator1", "eye_rot_locator2", "upperLid_pos_locator1", "lowerLid_pos_locator1", "result_grp", "constMe_to_parentJoint"]
+		},
+	
     "rig":{
     	"file":"eye_rig.ma",
-	    "setInput" : { 
-	    		"eye"         : "eye_input",
-	    		"eyeBall"     : "eyeBall_input",
-	    		"iris"        : "iris_input",
-	    		"upperLid"    : "upperLid_input",
-	    		"upperLidEnd" : "upperLidEnd_input",
-	    		"lowerLid"    : "lowerLid_input",
-	    		"lowerLidEnd" : "lowerLidEnd_input"
-	    		},
-	    "setOutput" : {}
-    	}
+    	"node":["module_grp", "eyeBall_zro", "eyeBall_lookAt", "eyeBall_FK_ctrl", "eyeBall_constrainJnt", "upperLid_zro", "upperLid_autoFollow", "upperLid_autoClose", "upperLid_FK_ctrl", "upperLid_constrainJnt", "lowerLid_zro", "lowerLid_autoFollow", "lowerLid_autoClose", "lowerLid_FK_ctrl", "lowerLid_constrainJnt", "lookAt_zro", "lookAt_ctrl", "lidClose_zro", "lidClose_ctrl", "lid_autoClose_rotation", "rig_grp", "lookAtRig_grp", "lookAt_result", "autoLidFollowRig_grp", "eye_rotation_zro", "eye_rotation", "upperLid_autoFollow_result", "lowerLid_autoFollow_result", "upperLid_rotation_zro", "upperLid_maxRotation", "upperLid_minRotation", "upperLid_rotation", "lowerLid_rotation_zro", "lowerLid_maxRotation", "lowerLid_minRotation", "lowerLid_rotation", "autoLidCloseRig_grp", "upperLid_autoFollow_rotation", "lowerLid_autoFollow_rotation", "upperLid_autoClose_result", "lowerLid_autoClose_result", "clst_grp", "clst_eyeZro_grp", "cluster3Handle", "clst_upperLidZro_grp", "cluster1Handle", "clst_lowerLidZro_grp", "cluster2Handle", "clst_closeZro_grp", "cluster4Handle", "input_grp", "input_constGrp", "output_grp", "const_grp"]
+    	},
+	
+	"jnt&Lay":{
+	    "snap_layToJnt":[
+		    	{"hdl":"root", 				"jnt":"root_jnt",		 "type":"parent", "offset":null},
+		    	{"hdl":"eye_aim_zro", 		"jnt":"iris_jnt", 		 "type":"parent", "offset":null},
+		    	{"hdl":"iris_pos_zro", 		"jnt":"iris_jnt", 		 "type":"parent", "offset":null},
+		    	{"hdl":"upperLid_aim_zro", 	"jnt":"upperLidEnd_jnt", "type":"parent", "offset":null},	    	
+		    	{"hdl":"upperLid_pos_zro", 	"jnt":"upperLidEnd_jnt", "type":"parent", "offset":null},
+		    	{"hdl":"lowerLid_aim_zro", 	"jnt":"lowerLidEnd_jnt", "type":"parent", "offset":null},
+		    	{"hdl":"lowerLid_pos_zro", 	"jnt":"lowerLidEnd_jnt", "type":"parent", "offset":null},	    	
+		    	{"hdl":"eye_aim", 	    	"jnt":"iris_jnt",		 "type":"parent", "offset":[2,0,0]},
+		    	{"hdl":"upperLid_aim", 		"jnt":"upperLidEnd_jnt", "type":"parent", "offset":[1,0,0]},
+		    	{"hdl":"lowerLid_aim", 		"jnt":"lowerLidEnd_jnt", "type":"parent", "offset":[1,0,0]}
+	    	],
+	    
+	    "const_JntToLay":[
+	            {"outputNode":"result_eye",			"target":"eye_jnt"		 },
+	        	{"outputNode":"result_eyeBall",		"target":"eyeBall_jnt"	 },
+	        	{"outputNode":"result_iris", 		"target":"iris_jnt"		 },
+	        	{"outputNode":"result_upperLid",	"target":"upperLid_jnt"	 },
+	        	{"outputNode":"result_upperLidEnd",	"target":"upperLidEnd_jnt"},
+	        	{"outputNode":"result_lowerLid", 	"target":"lowerLid_jnt"	 },
+	        	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd_jnt"}
+	    	]
+		}
     
 }

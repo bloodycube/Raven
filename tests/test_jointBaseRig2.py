@@ -1,18 +1,38 @@
-import pymel.core as pm
-
 import sys
 sys.path.append(r'D:\workspace_Git\Raven')
 
-import raven.jointBaseRig2 as rig
-import raven.rigLib.transform as tr
-reload(rig)
-reload(tr)
+import pymel.core as pm
 
-# 눈 인스턴스 생성
-leftEye = rig.Eye('L')
+import raven.jointBaseRig2 as jntRig
+reload(jntRig)
 
-# 눈 조인트 생성
-leftEye.createJoint()
+jnt = jntRig.Joint()
 
-# 조인트 레이아웃 생성
-leftEye.createLayout()
+jnt.getFilePath()
+jnt.getJsonData()
+jnt.isExists()
+
+jnt.setJsonData("eye.json", key='joint')
+jnt.getFilePath()
+jnt.getJsonData()
+jnt.isExists()
+
+pm.newFile(f=True)
+jnt.getPrefix()
+jnt.importFile()
+jnt.isExists()
+jnt.printNode()
+
+pm.newFile(f=True)
+jnt.setPrefix("eye_L")
+jnt.setPrefix("")
+jnt.getPrefix()
+jnt.isExists(True)
+jnt.importFile()
+jnt.isExists()
+jnt.printNode()
+
+jnt.openFile()
+jnt.saveFile()
+
+
