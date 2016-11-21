@@ -278,41 +278,6 @@ class Base(object):
         ''' 셋업 '''
         self.importFile()
         
-    def __snap_layTojnt(self):
-        ''' 레이아웃 리그를 조인트에 위치 시킴 '''
-        
-        # 레이아웃이 존재하지 않으면 에러, 중지.
-        if not self.isLayExists():
-            raise AttributeError (u"레이아웃 리그가 존재하지 않습니다.")        
-        
-        self.snap_layToJnt  = []
-        for item in data['snap_layToJnt']:
-            jnt       = item['jnt'].replace('__SIDE__',self.__getSideChar())
-            hdl       = self.layoutPrefix + item['hdl']
-            constType = item['type']
-            offset    = item['offset']
-            
-            self.snap_layToJnt.append( {"joint":jnt, "handle":hdl, "constType":constType, "offset":offset} )
-            
-        for item in self.snap_layToJnt:
-            # 요소 분리
-            jnt       = pm.PyNode( item['joint'] )
-            hdl       = pm.PyNode( item['handle'] )
-            constType = item['constType']
-            offset    = item['offset']
-            
-            # 스내핑~
-            snap( jnt, hdl, constType=constType)
-            
-            # 옵셋
-            if offset:
-                for attr, val in zip(['tx','ty','tz'], offset):
-                    
-                    # 어트리뷰트가 잠긴경우 그냥 패스
-                    try:
-                        hdl.attr(attr).set(val)
-                    except:
-                        pass
                     
 class Joint(Base):
     def __init__(self, jsonFileName=None, prefix=''):
