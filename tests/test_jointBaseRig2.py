@@ -1,5 +1,6 @@
 import sys
 sys.path.append(r'D:\workspace_Git\Raven')
+#sys.path.append('/Users/kyuho_choi/git/Raven')
 
 import pymel.core as pm
 

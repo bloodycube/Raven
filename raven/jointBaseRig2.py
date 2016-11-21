@@ -82,9 +82,6 @@ class Base(object):
         
     def getRigType(self):
         ''' rigType 설정 [joint, layout, rig] '''
-        if not self.__rigType  :
-            raise AttributeError(u"rigType이 지정되지 않았습니다.")
-        
         return self.__rigType        
 
     def setJsonData(self, jsonFileName ):
@@ -102,7 +99,11 @@ class Base(object):
             data = json.loads( fileHdl.read() )
         
         # 데이터 쓰기
-        self.__jsonData = data
+        rigType = self.getRigType()
+        if not rigType:
+            raise AttributeError(u'rigType을 우선 설정 하세요.')
+        
+        self.__jsonData = data[rigType]
         
         # 노드 레지스트 시도
         self.tryNodeRegist()
@@ -111,6 +112,7 @@ class Base(object):
         ''' jsonData 리턴 '''
         if not self.__jsonData:
             raise AttributeError(u"jsonData가 정의 되지 않았습니다. setJsonData( jsonFileName, key)를 사용하여 데이터를 설정 해주세요.")
+        
         return self.__jsonData
     
     def setPrefix(self, prefix):
@@ -127,10 +129,9 @@ class Base(object):
         ''' 씬에 필요노드가 존재하는지 검사, 하나라도 없으면 Flase를 출력 '''
         condition = True        
         prefix = self.getPrefix() + "_" if self.getPrefix() else ""
-        rigType = self.getRigType()
-       
+
         notExists = [] 
-        for node in self.getJsonData()[rigType]['node']:
+        for node in self.getJsonData()['node']:
             nodeName = prefix + node
             if not pm.objExists(nodeName):
                 condition = False
@@ -152,13 +153,12 @@ class Base(object):
         ''' 필요노드 등록 '''        
         self.nodes = Struct()
         prefix = self.getPrefix() + "_" if self.getPrefix() else ""
-        rigType = self.getRigType()
-        
+     
         # 씬에 해당 필요 노드들이 존재하는지 확인
         if not self.isExists():
             raise AttributeError(u'씬에 필요노드가 존재하지 않습니다.')
         
-        for item in self.getJsonData()[rigType]['node']:
+        for item in self.getJsonData()['node']:
             # 노드명 확정
             node = prefix + item
             
@@ -212,21 +212,17 @@ class Base(object):
         # 내용 출력
         print ''.join(result)
 
-    def printStatus(self):
-        rigType = self.getRigType()
-        
+    def printStatus(self):       
         print "rigType:",   self.getRigType()
-        print "jsonData :", self.getJsonData()[rigType]
+        print "jsonData :", self.getJsonData()
         print "prefix :",   self.getPrefix()
         print "isExists :", self.isExists()
         print "rigFilePath : (%s), %s" % ( os.path.exists(self.getFilePath()), self.getFilePath()) 
     
     def getFilePath(self):
         ''' 파일경로 리턴 '''
-        rigType = self.getRigType()
-        
         #return getFilesDir() + self.__jsonData['file']
-        return getFilesDir() + self.getJsonData()[rigType]['file']
+        return getFilesDir() + self.getJsonData()['file']
   
     def importFile(self):
         ''' 리그파일 임포트 '''
