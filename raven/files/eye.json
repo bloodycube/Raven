@@ -19,21 +19,8 @@
 
 	"joint":{
 		"file":"eye_joint.ma",
-		"node":["root_jnt", "eyeBall_jnt", "iris_jnt", "upperLid_jnt", "upperLidEnd_jnt", "lowerLid_jnt", "lowerLidEnd_jnt"]
-		},
-	
-	"layout":{
-		"file":"eye_template.ma",
-		"node":["parent", "root", "hdl_grp", "eye_up_zro", "eye_up", "eye_aim_zro", "eye_aim", "eye_pos", "eye_rot", "upperLid_rot", "upperLid_pos_zro", "upperLid_pos", "lowerLid_rot", "lowerLid_pos_zro", "lowerLid_pos", "iris_pos_zro", "iris_pos", "upperLid_aim_zro", "upperLid_aim", "lowerLid_aim_zro", "lowerLid_aim", "rig_grp", "calc_jointOrient_grp", "constMe_to_parent", "eye_jo", "eyeBall_jo", "upperLid_jo", "lowerLid_jo", "const_grp", "eye_rot_locator1", "iris_pos_locator1", "upperLid_rot_locator1", "lowerLid_rot_locator1", "eye_rot_locator2", "upperLid_pos_locator1", "lowerLid_pos_locator1", "result_grp", "constMe_to_parentJoint"]
-		},
-	
-    "rig":{
-    	"file":"eye_rig.ma",
-    	"node":["module_grp", "eyeBall_zro", "eyeBall_lookAt", "eyeBall_FK_ctrl", "eyeBall_constrainJnt", "upperLid_zro", "upperLid_autoFollow", "upperLid_autoClose", "upperLid_FK_ctrl", "upperLid_constrainJnt", "lowerLid_zro", "lowerLid_autoFollow", "lowerLid_autoClose", "lowerLid_FK_ctrl", "lowerLid_constrainJnt", "lookAt_zro", "lookAt_ctrl", "lidClose_zro", "lidClose_ctrl", "lid_autoClose_rotation", "rig_grp", "lookAtRig_grp", "lookAt_result", "autoLidFollowRig_grp", "eye_rotation_zro", "eye_rotation", "upperLid_autoFollow_result", "lowerLid_autoFollow_result", "upperLid_rotation_zro", "upperLid_maxRotation", "upperLid_minRotation", "upperLid_rotation", "lowerLid_rotation_zro", "lowerLid_maxRotation", "lowerLid_minRotation", "lowerLid_rotation", "autoLidCloseRig_grp", "upperLid_autoFollow_rotation", "lowerLid_autoFollow_rotation", "upperLid_autoClose_result", "lowerLid_autoClose_result", "clst_grp", "clst_eyeZro_grp", "cluster3Handle", "clst_upperLidZro_grp", "cluster1Handle", "clst_lowerLidZro_grp", "cluster2Handle", "clst_closeZro_grp", "cluster4Handle", "input_grp", "input_constGrp", "output_grp", "const_grp"]
-    	},
-	
-	"jnt&Lay":{
-	    "snap_layToJnt":[
+		"node":["root_jnt", "eyeBall_jnt", "iris_jnt", "upperLid_jnt", "upperLidEnd_jnt", "lowerLid_jnt", "lowerLidEnd_jnt"],
+		"snapToLay":[
 		    	{"hdl":"root", 				"jnt":"root_jnt",		 "type":"parent", "offset":null},
 		    	{"hdl":"eye_aim_zro", 		"jnt":"iris_jnt", 		 "type":"parent", "offset":null},
 		    	{"hdl":"iris_pos_zro", 		"jnt":"iris_jnt", 		 "type":"parent", "offset":null},
@@ -45,8 +32,7 @@
 		    	{"hdl":"upperLid_aim", 		"jnt":"upperLidEnd_jnt", "type":"parent", "offset":[1,0,0]},
 		    	{"hdl":"lowerLid_aim", 		"jnt":"lowerLidEnd_jnt", "type":"parent", "offset":[1,0,0]}
 	    	],
-	    
-	    "const_JntToLay":[
+	    "constByLay":[
 	            {"outputNode":"result_eye",			"target":"eye_jnt"		 },
 	        	{"outputNode":"result_eyeBall",		"target":"eyeBall_jnt"	 },
 	        	{"outputNode":"result_iris", 		"target":"iris_jnt"		 },
@@ -55,6 +41,15 @@
 	        	{"outputNode":"result_lowerLid", 	"target":"lowerLid_jnt"	 },
 	        	{"outputNode":"result_lowerLidEnd", "target":"lowerLidEnd_jnt"}
 	    	]
-		}
-    
+		},
+	
+	"layout":{
+		"file":"eye_template.ma",
+		"node":["parent", "root", "hdl_grp", "eye_up_zro", "eye_up", "eye_aim_zro", "eye_aim", "eye_pos", "eye_rot", "upperLid_rot", "upperLid_pos_zro", "upperLid_pos", "lowerLid_rot", "lowerLid_pos_zro", "lowerLid_pos", "iris_pos_zro", "iris_pos", "upperLid_aim_zro", "upperLid_aim", "lowerLid_aim_zro", "lowerLid_aim", "rig_grp", "calc_jointOrient_grp", "constMe_to_parent", "eye_jo", "eyeBall_jo", "upperLid_jo", "lowerLid_jo", "const_grp", "eye_rot_locator1", "iris_pos_locator1", "upperLid_rot_locator1", "lowerLid_rot_locator1", "eye_rot_locator2", "upperLid_pos_locator1", "lowerLid_pos_locator1", "result_grp", "constMe_to_parentJoint"]
+		},
+	
+    "rig":{
+    	"file":"eye_rig.ma",
+    	"node":["module_grp", "eyeBall_zro", "eyeBall_lookAt", "eyeBall_FK_ctrl", "eyeBall_constrainJnt", "upperLid_zro", "upperLid_autoFollow", "upperLid_autoClose", "upperLid_FK_ctrl", "upperLid_constrainJnt", "lowerLid_zro", "lowerLid_autoFollow", "lowerLid_autoClose", "lowerLid_FK_ctrl", "lowerLid_constrainJnt", "lookAt_zro", "lookAt_ctrl", "lidClose_zro", "lidClose_ctrl", "lid_autoClose_rotation", "rig_grp", "lookAtRig_grp", "lookAt_result", "autoLidFollowRig_grp", "eye_rotation_zro", "eye_rotation", "upperLid_autoFollow_result", "lowerLid_autoFollow_result", "upperLid_rotation_zro", "upperLid_maxRotation", "upperLid_minRotation", "upperLid_rotation", "lowerLid_rotation_zro", "lowerLid_maxRotation", "lowerLid_minRotation", "lowerLid_rotation", "autoLidCloseRig_grp", "upperLid_autoFollow_rotation", "lowerLid_autoFollow_rotation", "upperLid_autoClose_result", "lowerLid_autoClose_result", "clst_grp", "clst_eyeZro_grp", "cluster3Handle", "clst_upperLidZro_grp", "cluster1Handle", "clst_lowerLidZro_grp", "cluster2Handle", "clst_closeZro_grp", "cluster4Handle", "input_grp", "input_constGrp", "output_grp", "const_grp"]
+    	}    
 }
